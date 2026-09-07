@@ -1,44 +1,43 @@
+import * as React from 'react';
 
-import * as React from "react";
-
-import { cn } from "@/lib/utils";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { cn } from '@/lib/utils';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 
 /* -------------------------------------------------------------------------- */
 /* Types                                                                      */
 /* -------------------------------------------------------------------------- */
 
-export type InputSize = "sm" | "md" | "lg";
+export type InputSize = 'sm' | 'md' | 'lg';
 
-export type InputVariant = "default" | "filled" | "ghost";
+export type InputVariant = 'default' | 'filled' | 'ghost';
 
 export type FormInputType =
-  | "text"
-  | "email"
-  | "password"
-  | "search"
-  | "url"
-  | "tel"
-  | "number"
-  | "date"
-  | "time"
-  | "datetime-local"
-  | "month"
-  | "week"
-  | "year"
-  | "textarea";
+    | 'text'
+    | 'email'
+    | 'password'
+    | 'search'
+    | 'url'
+    | 'tel'
+    | 'number'
+    | 'date'
+    | 'time'
+    | 'datetime-local'
+    | 'month'
+    | 'week'
+    | 'year'
+    | 'textarea';
 
 /* -------------------------------------------------------------------------- */
 /* Temporal types                                                             */
 /* -------------------------------------------------------------------------- */
 
 const TEMPORAL_TYPES = new Set<FormInputType>([
-  "date",
-  "time",
-  "datetime-local",
-  "month",
-  "week",
+    'date',
+    'time',
+    'datetime-local',
+    'month',
+    'week',
 ]);
 
 /* -------------------------------------------------------------------------- */
@@ -46,21 +45,21 @@ const TEMPORAL_TYPES = new Set<FormInputType>([
 /* -------------------------------------------------------------------------- */
 
 interface FormFieldBaseProps {
-  id?: string;
-  label?: React.ReactNode;
+    id?: string;
+    label?: React.ReactNode;
 
-  error?: React.ReactNode;
-  helperText?: React.ReactNode;
+    error?: React.ReactNode;
+    helperText?: React.ReactNode;
 
-  size?: InputSize;
-  variant?: InputVariant;
+    size?: InputSize;
+    variant?: InputVariant;
 
-  hideLabel?: boolean;
-  wrapperClassName?: string;
+    hideLabel?: boolean;
+    wrapperClassName?: string;
 
-  disabled?: boolean;
-  required?: boolean;
-  readOnly?: boolean;
+    disabled?: boolean;
+    required?: boolean;
+    readOnly?: boolean;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -68,28 +67,24 @@ interface FormFieldBaseProps {
 /* -------------------------------------------------------------------------- */
 
 interface InputSpecificProps
-  extends Omit<
-    React.InputHTMLAttributes<HTMLInputElement>,
-    | keyof FormFieldBaseProps
-    | "size"
-    | "type"
-    | "onChange"
-  >,
-  FormFieldBaseProps {
-  type?: Exclude<FormInputType, "textarea">;
+    extends
+        Omit<
+            React.InputHTMLAttributes<HTMLInputElement>,
+            keyof FormFieldBaseProps | 'size' | 'type' | 'onChange'
+        >,
+        FormFieldBaseProps {
+    type?: Exclude<FormInputType, 'textarea'>;
 
-  /**
-   * Explicitly typed input change handler.
-   */
-  onChange?: (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => void;
+    /**
+     * Explicitly typed input change handler.
+     */
+    onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 
-  leftIcon?: React.ReactNode;
-  rightIcon?: React.ReactNode;
-  rightAction?: React.ReactNode;
+    leftIcon?: React.ReactNode;
+    rightIcon?: React.ReactNode;
+    rightAction?: React.ReactNode;
 
-  showCount?: boolean;
+    showCount?: boolean;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -97,64 +92,58 @@ interface InputSpecificProps
 /* -------------------------------------------------------------------------- */
 
 interface TextareaSpecificProps
-  extends Omit<
-    React.TextareaHTMLAttributes<HTMLTextAreaElement>,
-    | keyof FormFieldBaseProps
-    | "size"
-    | "type"
-    | "onChange"
-  >,
-  FormFieldBaseProps {
-  type: "textarea";
+    extends
+        Omit<
+            React.TextareaHTMLAttributes<HTMLTextAreaElement>,
+            keyof FormFieldBaseProps | 'size' | 'type' | 'onChange'
+        >,
+        FormFieldBaseProps {
+    type: 'textarea';
 
-  /**
-   * Explicitly typed textarea change handler.
-   */
-  onChange?: (
-    event: React.ChangeEvent<HTMLTextAreaElement>
-  ) => void;
+    /**
+     * Explicitly typed textarea change handler.
+     */
+    onChange?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
 
-  showCount?: boolean;
-  resizable?: boolean;
+    showCount?: boolean;
+    resizable?: boolean;
 }
 
 /* -------------------------------------------------------------------------- */
 /* Union                                                                      */
 /* -------------------------------------------------------------------------- */
 
-export type FormInputProps =
-  | InputSpecificProps
-  | TextareaSpecificProps;
+export type FormInputProps = InputSpecificProps | TextareaSpecificProps;
 
 /* -------------------------------------------------------------------------- */
 /* Size configuration                                                         */
 /* -------------------------------------------------------------------------- */
 
 const sizeConfig: Record<
-  InputSize,
-  {
-    input: string;
-    textarea: string;
-    icon: string;
-  }
+    InputSize,
+    {
+        input: string;
+        textarea: string;
+        icon: string;
+    }
 > = {
-  sm: {
-    input: "h-8 text-sm px-2.5",
-    textarea: "min-h-20 text-sm px-2.5 py-1.5",
-    icon: "size-3.5",
-  },
+    sm: {
+        input: 'h-8 text-sm px-2.5',
+        textarea: 'min-h-20 text-sm px-2.5 py-1.5',
+        icon: 'size-3.5',
+    },
 
-  md: {
-    input: "h-9 text-sm px-3",
-    textarea: "min-h-24 text-sm px-3 py-2",
-    icon: "size-4",
-  },
+    md: {
+        input: 'h-9 text-sm px-3',
+        textarea: 'min-h-24 text-sm px-3 py-2',
+        icon: 'size-4',
+    },
 
-  lg: {
-    input: "h-11 text-base px-4",
-    textarea: "min-h-28 text-base px-4 py-2.5",
-    icon: "size-5",
-  },
+    lg: {
+        input: 'h-11 text-base px-4',
+        textarea: 'min-h-28 text-base px-4 py-2.5',
+        icon: 'size-5',
+    },
 };
 
 /* -------------------------------------------------------------------------- */
@@ -162,13 +151,11 @@ const sizeConfig: Record<
 /* -------------------------------------------------------------------------- */
 
 const variantConfig: Record<InputVariant, string> = {
-  default: "",
+    default: '',
 
-  filled:
-    "bg-muted/50 border-transparent focus-visible:bg-background",
+    filled: 'bg-muted/50 border-transparent focus-visible:bg-background',
 
-  ghost:
-    "border-transparent shadow-none bg-transparent focus-visible:border-input",
+    ghost: 'border-transparent shadow-none bg-transparent focus-visible:border-input',
 };
 
 /* -------------------------------------------------------------------------- */
@@ -176,21 +163,21 @@ const variantConfig: Record<InputVariant, string> = {
 /* -------------------------------------------------------------------------- */
 
 function buildDescribedBy(
-  id: string | undefined,
-  error: React.ReactNode,
-  helperText: React.ReactNode
+    id: string | undefined,
+    error: React.ReactNode,
+    helperText: React.ReactNode,
 ) {
-  const ids: string[] = [];
+    const ids: string[] = [];
 
-  if (error && id) {
-    ids.push(`${id}-error`);
-  }
+    if (error && id) {
+        ids.push(`${id}-error`);
+    }
 
-  if (helperText && id) {
-    ids.push(`${id}-helper`);
-  }
+    if (helperText && id) {
+        ids.push(`${id}-helper`);
+    }
 
-  return ids.length > 0 ? ids.join(" ") : undefined;
+    return ids.length > 0 ? ids.join(' ') : undefined;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -198,21 +185,21 @@ function buildDescribedBy(
 /* -------------------------------------------------------------------------- */
 
 function resolvedInputType(
-  type: Exclude<FormInputType, "textarea"> | undefined
+    type: Exclude<FormInputType, 'textarea'> | undefined,
 ): React.HTMLInputTypeAttribute {
-  if (!type) {
-    return "text";
-  }
+    if (!type) {
+        return 'text';
+    }
 
-  /**
-   * "year" is not a native HTML input type.
-   * We represent it using number.
-   */
-  if (type === "year") {
-    return "number";
-  }
+    /**
+     * "year" is not a native HTML input type.
+     * We represent it using number.
+     */
+    if (type === 'year') {
+        return 'number';
+    }
 
-  return type;
+    return type;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -220,15 +207,15 @@ function resolvedInputType(
 /* -------------------------------------------------------------------------- */
 
 function getYearConstraints(
-  min?: React.InputHTMLAttributes<HTMLInputElement>["min"],
-  max?: React.InputHTMLAttributes<HTMLInputElement>["max"]
+    min?: React.InputHTMLAttributes<HTMLInputElement>['min'],
+    max?: React.InputHTMLAttributes<HTMLInputElement>['max'],
 ) {
-  const currentYear = new Date().getFullYear();
+    const currentYear = new Date().getFullYear();
 
-  return {
-    min: min ?? 1900,
-    max: max ?? currentYear + 10,
-  };
+    return {
+        min: min ?? 1900,
+        max: max ?? currentYear + 10,
+    };
 }
 
 /* -------------------------------------------------------------------------- */
@@ -236,37 +223,33 @@ function getYearConstraints(
 /* -------------------------------------------------------------------------- */
 
 function FieldLabel({
-  id,
-  label,
-  required,
-  hideLabel,
+    id,
+    label,
+    required,
+    hideLabel,
 }: {
-  id?: string;
-  label?: React.ReactNode;
-  required?: boolean;
-  hideLabel?: boolean;
+    id?: string;
+    label?: React.ReactNode;
+    required?: boolean;
+    hideLabel?: boolean;
 }) {
-  if (!label) {
-    return null;
-  }
+    if (!label) {
+        return null;
+    }
 
-  return (
-    <label
-      htmlFor={id}
-      className={cn(
-        "mb-1.5 block text-sm font-medium",
-        hideLabel && "sr-only"
-      )}
-    >
-      {label}
+    return (
+        <label
+            htmlFor={id}
+            className={cn(
+                'mb-1.5 block text-sm font-medium',
+                hideLabel && 'sr-only',
+            )}
+        >
+            {label}
 
-      {required && (
-        <span className="ml-1 text-destructive">
-          *
-        </span>
-      )}
-    </label>
-  );
+            {required && <span className="text-destructive ml-1">*</span>}
+        </label>
+    );
 }
 
 /* -------------------------------------------------------------------------- */
@@ -274,70 +257,66 @@ function FieldLabel({
 /* -------------------------------------------------------------------------- */
 
 function FieldFooter({
-  id,
-  error,
-  helperText,
-  value,
-  maxLength,
-  showCount,
+    id,
+    error,
+    helperText,
+    value,
+    maxLength,
+    showCount,
 }: {
-  id?: string;
-  error?: React.ReactNode;
-  helperText?: React.ReactNode;
-  value?: unknown;
-  maxLength?: number;
-  showCount?: boolean;
+    id?: string;
+    error?: React.ReactNode;
+    helperText?: React.ReactNode;
+    value?: unknown;
+    maxLength?: number;
+    showCount?: boolean;
 }) {
-  const currentLength =
-    value === undefined || value === null
-      ? 0
-      : String(value).length;
+    const currentLength =
+        value === undefined || value === null ? 0 : String(value).length;
 
-  const hasFooter =
-    !!error ||
-    !!helperText ||
-    (showCount && maxLength !== undefined);
+    const hasFooter =
+        !!error || !!helperText || (showCount && maxLength !== undefined);
 
-  if (!hasFooter) {
-    return null;
-  }
+    if (!hasFooter) {
+        return null;
+    }
 
-  return (
-    <div className="mt-1.5 flex items-start justify-between gap-2">
-      <div className="min-w-0 flex-1">
-        {error && (
-          <p
-            id={id ? `${id}-error` : undefined}
-            className="text-sm text-destructive"
-          >
-            {error}
-          </p>
-        )}
+    return (
+        <div className="mt-1.5 flex items-start justify-between gap-2">
+            <div className="min-w-0 flex-1">
+                {error && (
+                    <p
+                        id={id ? `${id}-error` : undefined}
+                        className="text-destructive text-sm"
+                    >
+                        {error}
+                    </p>
+                )}
 
-        {!error && helperText && (
-          <p
-            id={id ? `${id}-helper` : undefined}
-            className="text-sm text-muted-foreground"
-          >
-            {helperText}
-          </p>
-        )}
-      </div>
+                {!error && helperText && (
+                    <p
+                        id={id ? `${id}-helper` : undefined}
+                        className="text-muted-foreground text-sm"
+                    >
+                        {helperText}
+                    </p>
+                )}
+            </div>
 
-      {showCount && maxLength !== undefined && (
-        <span
-          className={cn(
-            "shrink-0 text-xs",
-            currentLength >= maxLength
-              ? "text-destructive"
-              : "text-muted-foreground"
-          )}
-        >
-          {currentLength}/{maxLength}
-        </span>
-      )}
-    </div>
-  );
+            {showCount && maxLength !== undefined && (
+                <span
+                    className={cn(
+                        'shrink-0 text-xs',
+                        currentLength >= maxLength
+                            ? 'text-destructive'
+                            : 'text-muted-foreground',
+                    )}
+                >
+                    {currentLength}/{maxLength}
+                </span>
+            )}
+        </div>
+    );
 }
 
 /* -------------------------------------------------------------------------- */
@@ -345,296 +324,263 @@ function FieldFooter({
 /* -------------------------------------------------------------------------- */
 
 const FormInput = React.forwardRef<
-  HTMLInputElement | HTMLTextAreaElement,
-  FormInputProps
+    HTMLInputElement | HTMLTextAreaElement,
+    FormInputProps
 >((props, ref) => {
-  /* ====================================================================== */
-  /* TEXTAREA                                                               */
-  /* ====================================================================== */
+    /* ====================================================================== */
+    /* TEXTAREA                                                               */
+    /* ====================================================================== */
 
-  if (props.type === "textarea") {
+    if (props.type === 'textarea') {
+        const {
+            id,
+            label,
+            error,
+            helperText,
+
+            size = 'md',
+            variant = 'default',
+
+            hideLabel = false,
+            wrapperClassName,
+
+            disabled,
+            required,
+            readOnly,
+
+            showCount = false,
+            resizable = true,
+
+            className,
+            onChange,
+            maxLength,
+
+            value,
+            defaultValue,
+
+            ...restTextarea
+        } = props;
+
+        const describedBy = buildDescribedBy(id, error, helperText);
+
+        const currentValue =
+            value !== undefined
+                ? value
+                : defaultValue !== undefined
+                  ? defaultValue
+                  : '';
+
+        /* ------------------------------------------------------------------ */
+        /* Textarea change handler                                            */
+        /* ------------------------------------------------------------------ */
+
+        const handleTextareaChange = (
+            event: React.ChangeEvent<HTMLTextAreaElement>,
+        ) => {
+            let nextValue = event.target.value;
+
+            if (maxLength !== undefined && nextValue.length > maxLength) {
+                nextValue = nextValue.slice(0, maxLength);
+
+                event.target.value = nextValue;
+            }
+
+            onChange?.(event);
+        };
+
+        return (
+            <div className={cn('w-full', wrapperClassName)}>
+                <FieldLabel
+                    id={id}
+                    label={label}
+                    required={required}
+                    hideLabel={hideLabel}
+                />
+
+                <Textarea
+                    {...restTextarea}
+                    ref={ref as React.Ref<HTMLTextAreaElement>}
+                    id={id}
+                    value={value}
+                    defaultValue={defaultValue}
+                    disabled={disabled}
+                    required={required}
+                    readOnly={readOnly}
+                    maxLength={maxLength}
+                    onChange={handleTextareaChange}
+                    aria-invalid={!!error}
+                    aria-describedby={describedBy}
+                    className={cn(
+                        sizeConfig[size].textarea,
+                        variantConfig[variant],
+
+                        !resizable && 'resize-none',
+
+                        error &&
+                            'border-destructive focus-visible:border-destructive',
+
+                        className,
+                    )}
+                />
+
+                <FieldFooter
+                    id={id}
+                    error={error}
+                    helperText={helperText}
+                    value={currentValue}
+                    maxLength={maxLength}
+                    showCount={showCount}
+                />
+            </div>
+        );
+    }
+
+    /* ====================================================================== */
+    /* INPUT                                                                  */
+    /* ====================================================================== */
+
     const {
-      id,
-      label,
-      error,
-      helperText,
+        id,
+        label,
+        error,
+        helperText,
 
-      size = "md",
-      variant = "default",
+        size = 'md',
+        variant = 'default',
 
-      hideLabel = false,
-      wrapperClassName,
+        hideLabel = false,
+        wrapperClassName,
 
-      disabled,
-      required,
-      readOnly,
+        disabled,
+        required,
+        readOnly,
 
-      showCount = false,
-      resizable = true,
+        leftIcon,
+        rightIcon,
+        rightAction,
 
-      className,
-      onChange,
-      maxLength,
+        showCount = false,
 
-      value,
-      defaultValue,
+        className,
+        onChange,
 
-      ...restTextarea
+        type,
+        min,
+        max,
+        maxLength,
+
+        value,
+        defaultValue,
+
+        ...restInput
     } = props;
 
-    const describedBy = buildDescribedBy(
-      id,
-      error,
-      helperText
-    );
+    const inputType = resolvedInputType(type);
+
+    const isYear = type === 'year';
+
+    const yearConstraints = isYear
+        ? getYearConstraints(min, max)
+        : {
+              min,
+              max,
+          };
+
+    const describedBy = buildDescribedBy(id, error, helperText);
 
     const currentValue =
-      value !== undefined
-        ? value
-        : defaultValue !== undefined
-          ? defaultValue
-          : "";
+        value !== undefined
+            ? value
+            : defaultValue !== undefined
+              ? defaultValue
+              : '';
 
-    /* ------------------------------------------------------------------ */
-    /* Textarea change handler                                            */
-    /* ------------------------------------------------------------------ */
+    /* ---------------------------------------------------------------------- */
+    /* Input change handler                                                   */
+    /* ---------------------------------------------------------------------- */
 
-    const handleTextareaChange = (
-      event: React.ChangeEvent<HTMLTextAreaElement>
-    ) => {
-      let nextValue = event.target.value;
-
-      if (
-        maxLength !== undefined &&
-        nextValue.length > maxLength
-      ) {
-        nextValue = nextValue.slice(0, maxLength);
-
-        event.target.value = nextValue;
-      }
-
-      onChange?.(event);
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        onChange?.(event);
     };
 
     return (
-      <div
-        className={cn(
-          "w-full",
-          wrapperClassName
-        )}
-      >
-        <FieldLabel
-          id={id}
-          label={label}
-          required={required}
-          hideLabel={hideLabel}
-        />
+        <div className={cn('w-full', wrapperClassName)}>
+            <FieldLabel
+                id={id}
+                label={label}
+                required={required}
+                hideLabel={hideLabel}
+            />
 
-        <Textarea
-          {...restTextarea}
-          ref={
-            ref as React.Ref<HTMLTextAreaElement>
-          }
-          id={id}
-          value={value}
-          defaultValue={defaultValue}
-          disabled={disabled}
-          required={required}
-          readOnly={readOnly}
-          maxLength={maxLength}
-          onChange={handleTextareaChange}
-          aria-invalid={!!error}
-          aria-describedby={describedBy}
-          className={cn(
-            sizeConfig[size].textarea,
-            variantConfig[variant],
+            <div className="relative">
+                {leftIcon && (
+                    <div
+                        className={cn(
+                            'text-muted-foreground pointer-events-none absolute top-1/2 left-3 z-10 -translate-y-1/2',
+                            sizeConfig[size].icon,
+                        )}
+                    >
+                        {leftIcon}
+                    </div>
+                )}
 
-            !resizable && "resize-none",
+                <Input
+                    {...restInput}
+                    ref={ref as React.Ref<HTMLInputElement>}
+                    id={id}
+                    type={inputType}
+                    value={value}
+                    defaultValue={defaultValue}
+                    disabled={disabled}
+                    required={required}
+                    readOnly={readOnly}
+                    min={yearConstraints.min}
+                    max={yearConstraints.max}
+                    maxLength={maxLength}
+                    onChange={handleInputChange}
+                    aria-invalid={!!error}
+                    aria-describedby={describedBy}
+                    role={type === 'search' ? 'searchbox' : undefined}
+                    className={cn(
+                        sizeConfig[size].input,
+                        variantConfig[variant],
 
-            error &&
-            "border-destructive focus-visible:border-destructive",
+                        leftIcon && 'pl-9',
 
-            className
-          )}
-        />
+                        (rightIcon || rightAction) && 'pr-9',
 
-        <FieldFooter
-          id={id}
-          error={error}
-          helperText={helperText}
-          value={currentValue}
-          maxLength={maxLength}
-          showCount={showCount}
-        />
-      </div>
+                        error &&
+                            'border-destructive focus-visible:border-destructive',
+
+                        className,
+                    )}
+                />
+
+                {(rightIcon || rightAction) && (
+                    <div
+                        className={cn(
+                            'text-muted-foreground absolute top-1/2 right-2 z-10 flex -translate-y-1/2 items-center gap-1',
+                            sizeConfig[size].icon,
+                        )}
+                    >
+                        {rightIcon}
+                        {rightAction}
+                    </div>
+                )}
+            </div>
+
+            <FieldFooter
+                id={id}
+                error={error}
+                helperText={helperText}
+                value={currentValue}
+                maxLength={maxLength}
+                showCount={showCount}
+            />
+        </div>
     );
-  }
-
-  /* ====================================================================== */
-  /* INPUT                                                                  */
-  /* ====================================================================== */
-
-  const {
-    id,
-    label,
-    error,
-    helperText,
-
-    size = "md",
-    variant = "default",
-
-    hideLabel = false,
-    wrapperClassName,
-
-    disabled,
-    required,
-    readOnly,
-
-    leftIcon,
-    rightIcon,
-    rightAction,
-
-    showCount = false,
-
-    className,
-    onChange,
-
-    type,
-    min,
-    max,
-    maxLength,
-
-    value,
-    defaultValue,
-
-    ...restInput
-  } = props;
-
-  const inputType = resolvedInputType(type);
-
-  const isYear = type === "year";
-
-  const yearConstraints = isYear
-    ? getYearConstraints(min, max)
-    : {
-      min,
-      max,
-    };
-
-  const describedBy = buildDescribedBy(
-    id,
-    error,
-    helperText
-  );
-
-  const currentValue =
-    value !== undefined
-      ? value
-      : defaultValue !== undefined
-        ? defaultValue
-        : "";
-
-  /* ---------------------------------------------------------------------- */
-  /* Input change handler                                                   */
-  /* ---------------------------------------------------------------------- */
-
-  const handleInputChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    onChange?.(event);
-  };
-
-  return (
-    <div
-      className={cn(
-        "w-full",
-        wrapperClassName
-      )}
-    >
-      <FieldLabel
-        id={id}
-        label={label}
-        required={required}
-        hideLabel={hideLabel}
-      />
-
-      <div className="relative">
-        {leftIcon && (
-          <div
-            className={cn(
-              "pointer-events-none absolute left-3 top-1/2 z-10 -translate-y-1/2 text-muted-foreground",
-              sizeConfig[size].icon
-            )}
-          >
-            {leftIcon}
-          </div>
-        )}
-
-        <Input
-          {...restInput}
-          ref={
-            ref as React.Ref<HTMLInputElement>
-          }
-          id={id}
-          type={inputType}
-          value={value}
-          defaultValue={defaultValue}
-          disabled={disabled}
-          required={required}
-          readOnly={readOnly}
-          min={yearConstraints.min}
-          max={yearConstraints.max}
-          maxLength={maxLength}
-          onChange={handleInputChange}
-          aria-invalid={!!error}
-          aria-describedby={describedBy}
-          role={
-            type === "search"
-              ? "searchbox"
-              : undefined
-          }
-          className={cn(
-            sizeConfig[size].input,
-            variantConfig[variant],
-
-            leftIcon && "pl-9",
-
-            (rightIcon || rightAction) &&
-            "pr-9",
-
-            error &&
-            "border-destructive focus-visible:border-destructive",
-
-            className
-          )}
-        />
-
-        {(rightIcon || rightAction) && (
-          <div
-            className={cn(
-              "absolute right-2 top-1/2 z-10 flex -translate-y-1/2 items-center gap-1 text-muted-foreground",
-              sizeConfig[size].icon
-            )}
-          >
-            {rightIcon}
-            {rightAction}
-          </div>
-        )}
-      </div>
-
-      <FieldFooter
-        id={id}
-        error={error}
-        helperText={helperText}
-        value={currentValue}
-        maxLength={maxLength}
-        showCount={showCount}
-      />
-    </div>
-  );
 });
 
-FormInput.displayName = "FormInput";
+FormInput.displayName = 'FormInput';
 
 export { FormInput };
-

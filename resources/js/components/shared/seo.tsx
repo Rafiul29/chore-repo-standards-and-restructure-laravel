@@ -1,6 +1,6 @@
-import React from 'react';
-import { Head } from '@inertiajs/react';
-import { SITE_CONFIG } from '@/constants/siteConfig';
+import React from "react";
+import { Head } from "@inertiajs/react";
+import { SITE_CONFIG } from "@/constants/siteConfig";
 
 interface SEOProps {
     title?: string;
@@ -9,7 +9,7 @@ interface SEOProps {
     image?: string;
     imageAlt?: string; // Social media image alternative text (WhatsApp/Facebook/Twitter)
     url?: string;
-    type?: 'website' | 'article' | 'product' | 'profile' | 'book';
+    type?: "website" | "article" | "product" | "profile" | "book";
     noindex?: boolean;
 
     // Article Specific Props
@@ -21,8 +21,8 @@ interface SEOProps {
     // E-commerce Product Specific Props
     productPrice?: string | number;
     productCurrency?: string;
-    productAvailability?: 'instock' | 'oos' | 'pending';
-    productCondition?: 'new' | 'used' | 'refurbished';
+    productAvailability?: "instock" | "oos" | "pending";
+    productCondition?: "new" | "used" | "refurbished";
 
     // Social Specific IDs (Optional)
     fbAppId?: string;
@@ -35,7 +35,7 @@ export default function SEO({
     image,
     imageAlt,
     url,
-    type = 'website',
+    type = "website",
     noindex = false,
     publishedTime,
     modifiedTime,
@@ -43,18 +43,24 @@ export default function SEO({
     section,
     productPrice,
     productCurrency,
-    productAvailability = 'instock',
-    productCondition = 'new',
+    productAvailability = "instock",
+    productCondition = "new",
     fbAppId,
 }: SEOProps) {
-    const fullTitle = title ? `${title} | ${SITE_CONFIG.name}` : SITE_CONFIG.name;
+    const fullTitle = title
+        ? `${title} | ${SITE_CONFIG.name}`
+        : SITE_CONFIG.name;
     const currentDescription = description || SITE_CONFIG.defaultDescription;
 
     const currentImage = image
-        ? (image.startsWith('http') ? image : `${SITE_CONFIG.baseUrl}${image}`)
+        ? image.startsWith("http")
+            ? image
+            : `${SITE_CONFIG.baseUrl}${image}`
         : `${SITE_CONFIG.baseUrl}${SITE_CONFIG.defaultImage}`;
 
-    const currentUrl = url ? `${SITE_CONFIG.baseUrl}${url}` : SITE_CONFIG.baseUrl;
+    const currentUrl = url
+        ? `${SITE_CONFIG.baseUrl}${url}`
+        : SITE_CONFIG.baseUrl;
     const currentImageAlt = imageAlt || fullTitle;
 
     return (
@@ -70,7 +76,10 @@ export default function SEO({
             {noindex ? (
                 <meta name="robots" content="noindex, nofollow" />
             ) : (
-                <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+                <meta
+                    name="robots"
+                    content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+                />
             )}
 
             {/* Canonical URL */}
@@ -93,24 +102,51 @@ export default function SEO({
             {fbAppId && <meta property="fb:app_id" content={fbAppId} />}
 
             {/* Article Specific Open Graph Tags (Blog / News) */}
-            {type === 'article' && (
+            {type === "article" && (
                 <>
-                    {publishedTime && <meta property="article:published_time" content={publishedTime} />}
-                    {modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
-                    <meta property="article:author" content={author || SITE_CONFIG.author} />
-                    {section && <meta property="article:section" content={section} />}
+                    {publishedTime && (
+                        <meta
+                            property="article:published_time"
+                            content={publishedTime}
+                        />
+                    )}
+                    {modifiedTime && (
+                        <meta
+                            property="article:modified_time"
+                            content={modifiedTime}
+                        />
+                    )}
+                    <meta
+                        property="article:author"
+                        content={author || SITE_CONFIG.author}
+                    />
+                    {section && (
+                        <meta property="article:section" content={section} />
+                    )}
                 </>
             )}
 
             {/* E-commerce Product Specific Open Graph Tags */}
-            {type === 'product' && (
+            {type === "product" && (
                 <>
                     {productPrice && (
-                        <meta property="product:price:amount" content={String(productPrice)} />
+                        <meta
+                            property="product:price:amount"
+                            content={String(productPrice)}
+                        />
                     )}
-                    <meta property="product:price:currency" content={productCurrency || SITE_CONFIG.currency} />
-                    <meta property="product:availability" content={productAvailability} />
-                    <meta property="product:condition" content={productCondition} />
+                    <meta
+                        property="product:price:currency"
+                        content={productCurrency || SITE_CONFIG.currency}
+                    />
+                    <meta
+                        property="product:availability"
+                        content={productAvailability}
+                    />
+                    <meta
+                        property="product:condition"
+                        content={productCondition}
+                    />
                 </>
             )}
 

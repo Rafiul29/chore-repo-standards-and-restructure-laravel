@@ -14,5 +14,5 @@ export function useMediaQuery(query: string): boolean {
         return () => media.removeEventListener("change", listener);
     }, [matches, query]);
 
-    keyframes: return matches;
+    return matches;
 }

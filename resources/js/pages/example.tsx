@@ -1,4 +1,3 @@
-
 import {
     Plus,
     Download,
@@ -36,25 +35,16 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 
 import { appToast } from "@/components/shared/toast";
-import DeleteAlert from "@/components/shared/delete-alet";
+import DeleteAlert from "@/components/shared/delete-alert";
 import { Modal } from "@/components/shared/modal";
 
-/**
- * Reusable grid classes
- *
- * Mobile  : 1 column
- * SM      : 2 columns
- * LG      : 3 columns
- * XL      : 4 columns
- */
 const gridClass =
     "grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4";
 
 const sectionClass =
     "mt-10 rounded-2xl border border-border bg-card p-6 shadow-sm";
 
-const sectionTitleClass =
-    "mb-6 text-xl font-bold tracking-tight";
+const sectionTitleClass = "mb-6 text-xl font-bold tracking-tight";
 
 /**
  * Modal Example
@@ -64,9 +54,7 @@ export function UserModalDemo() {
 
     return (
         <div>
-            <Button onClick={() => setIsOpen(true)}>
-                Open Modal
-            </Button>
+            <Button onClick={() => setIsOpen(true)}>Open Modal</Button>
 
             <Modal
                 isOpen={isOpen}
@@ -89,7 +77,7 @@ export function UserModalDemo() {
                     </div>
                 }
             >
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 py-2">
+                <div className="grid grid-cols-1 gap-4 py-2 sm:grid-cols-2">
                     <FormInput
                         id="modal-name"
                         name="modal-name"
@@ -120,7 +108,6 @@ export default function ComponentsExample() {
 
     return (
         <div className="mx-auto w-full space-y-8 px-4 py-6 sm:px-6 lg:px-8">
-
             {/* ================================================================
                 PAGE HEADER
             ================================================================= */}
@@ -130,37 +117,33 @@ export default function ComponentsExample() {
                     Components Example
                 </h1>
 
-                <p className="text-sm text-muted-foreground sm:text-base">
+                <p className="text-muted-foreground text-sm sm:text-base">
                     This page is used to showcase the components in the
                     application.
                 </p>
             </header>
 
-
             {/* ================================================================
                 BASIC INFORMATION
             ================================================================= */}
 
-            <div className="rounded-2xl border border-border bg-card p-4 shadow-sm sm:p-6 lg:p-8">
-
+            <div className="border-border bg-card rounded-2xl border p-4 shadow-sm sm:p-6 lg:p-8">
                 {/* ============================================================
                     ALL INPUT TYPES
                 ============================================================= */}
 
                 <section className="space-y-6">
-
                     <div>
                         <h2 className="text-xl font-bold sm:text-2xl">
                             All Input Types
                         </h2>
 
-                        <p className="mt-1 text-sm text-muted-foreground">
+                        <p className="text-muted-foreground mt-1 text-sm">
                             Complete FormInput component examples.
                         </p>
                     </div>
 
                     <div className={gridClass}>
-
                         <FormInput
                             id="input-name"
                             name="name"
@@ -185,17 +168,15 @@ export default function ComponentsExample() {
                             label="Password"
                             placeholder="Enter password"
                             value={password}
-                            onChange={(e) =>
-                                setPassword(e.target.value)
-                            }
+                            onChange={(
+                                e: React.ChangeEvent<HTMLInputElement>,
+                            ) => setPassword(e.target.value)}
                             leftIcon={<Lock className="size-4" />}
                             rightAction={
                                 <button
                                     type="button"
                                     onClick={() =>
-                                        setShowPassword(
-                                            (value) => !value
-                                        )
+                                        setShowPassword((value) => !value)
                                     }
                                     className="cursor-pointer"
                                 >
@@ -317,24 +298,17 @@ export default function ComponentsExample() {
                                 resizable={false}
                             />
                         </div>
-
                     </div>
-
                 </section>
-
 
                 {/* ============================================================
                     ICON EXAMPLES
                 ============================================================= */}
 
                 <section className={sectionClass}>
-
-                    <h2 className={sectionTitleClass}>
-                        Icons
-                    </h2>
+                    <h2 className={sectionTitleClass}>Icons</h2>
 
                     <div className={gridClass}>
-
                         <FormInput
                             id="icon-username"
                             name="username"
@@ -388,24 +362,17 @@ export default function ComponentsExample() {
                             placeholder="Enter number"
                             leftIcon={<Hash className="size-4" />}
                         />
-
                     </div>
-
                 </section>
-
 
                 {/* ============================================================
                     SIZES
                 ============================================================= */}
 
                 <section className={sectionClass}>
-
-                    <h2 className={sectionTitleClass}>
-                        Sizes
-                    </h2>
+                    <h2 className={sectionTitleClass}>Sizes</h2>
 
                     <div className={gridClass}>
-
                         <FormInput
                             id="size-small"
                             type="text"
@@ -429,24 +396,17 @@ export default function ComponentsExample() {
                             placeholder="Large input"
                             size="lg"
                         />
-
                     </div>
-
                 </section>
-
 
                 {/* ============================================================
                     VARIANTS
                 ============================================================= */}
 
                 <section className={sectionClass}>
-
-                    <h2 className={sectionTitleClass}>
-                        Variants
-                    </h2>
+                    <h2 className={sectionTitleClass}>Variants</h2>
 
                     <div className={gridClass}>
-
                         <FormInput
                             id="variant-default"
                             type="text"
@@ -470,24 +430,17 @@ export default function ComponentsExample() {
                             placeholder="Ghost variant"
                             variant="ghost"
                         />
-
                     </div>
-
                 </section>
-
 
                 {/* ============================================================
                     CHARACTER COUNT
                 ============================================================= */}
 
                 <section className={sectionClass}>
-
-                    <h2 className={sectionTitleClass}>
-                        Character Count
-                    </h2>
+                    <h2 className={sectionTitleClass}>Character Count</h2>
 
                     <div className={gridClass}>
-
                         <FormInput
                             id="count-title"
                             name="title"
@@ -510,24 +463,17 @@ export default function ComponentsExample() {
                                 showCount
                             />
                         </div>
-
                     </div>
-
                 </section>
-
 
                 {/* ============================================================
                     VALIDATION
                 ============================================================= */}
 
                 <section className={sectionClass}>
-
-                    <h2 className={sectionTitleClass}>
-                        Validation
-                    </h2>
+                    <h2 className={sectionTitleClass}>Validation</h2>
 
                     <div className={gridClass}>
-
                         <FormInput
                             id="validation-required"
                             name="required"
@@ -564,24 +510,17 @@ export default function ComponentsExample() {
                             error="Username is already taken."
                             helperText="Try another username."
                         />
-
                     </div>
-
                 </section>
-
 
                 {/* ============================================================
                     STATES
                 ============================================================= */}
 
                 <section className={sectionClass}>
-
-                    <h2 className={sectionTitleClass}>
-                        States
-                    </h2>
+                    <h2 className={sectionTitleClass}>States</h2>
 
                     <div className={gridClass}>
-
                         <FormInput
                             id="state-disabled"
                             name="disabled"
@@ -599,24 +538,17 @@ export default function ComponentsExample() {
                             value="This value cannot be changed"
                             readOnly
                         />
-
                     </div>
-
                 </section>
-
 
                 {/* ============================================================
                     TEXTAREA VARIATIONS
                 ============================================================= */}
 
                 <section className={sectionClass}>
-
-                    <h2 className={sectionTitleClass}>
-                        Textarea Variations
-                    </h2>
+                    <h2 className={sectionTitleClass}>Textarea Variations</h2>
 
                     <div className={gridClass}>
-
                         <FormInput
                             id="textarea-default"
                             name="textarea_default"
@@ -674,24 +606,17 @@ export default function ComponentsExample() {
                             rows={5}
                             helperText="Describe your product in detail."
                         />
-
                     </div>
-
                 </section>
-
 
                 {/* ============================================================
                     DATE / TIME
                 ============================================================= */}
 
                 <section className={sectionClass}>
-
-                    <h2 className={sectionTitleClass}>
-                        Date / Time Inputs
-                    </h2>
+                    <h2 className={sectionTitleClass}>Date / Time Inputs</h2>
 
                     <div className={gridClass}>
-
                         <FormInput
                             id="temporal-date"
                             name="date"
@@ -737,24 +662,17 @@ export default function ComponentsExample() {
                             min={2000}
                             max={2035}
                         />
-
                     </div>
-
                 </section>
-
 
                 {/* ============================================================
                     FORM COMPONENTS
                 ============================================================= */}
 
                 <section className={sectionClass}>
-
-                    <h2 className={sectionTitleClass}>
-                        Form Components
-                    </h2>
+                    <h2 className={sectionTitleClass}>Form Components</h2>
 
                     <div className={gridClass}>
-
                         {/* Description */}
                         <div className="sm:col-span-2 lg:col-span-2">
                             <FormInput
@@ -782,9 +700,7 @@ export default function ComponentsExample() {
                             id="grid-search"
                             name="grid_search"
                             type="search"
-                            leftIcon={
-                                <SearchIcon className="size-4" />
-                            }
+                            leftIcon={<SearchIcon className="size-4" />}
                             placeholder="Search..."
                             size="lg"
                             variant="filled"
@@ -812,9 +728,7 @@ export default function ComponentsExample() {
                             label="Full Name"
                             placeholder="Enter your name"
                             required
-                            leftIcon={
-                                <User className="size-4" />
-                            }
+                            leftIcon={<User className="size-4" />}
                         />
 
                         <FormInput
@@ -824,9 +738,7 @@ export default function ComponentsExample() {
                             type="email"
                             placeholder="name@example.com"
                             required
-                            leftIcon={
-                                <Mail className="size-4" />
-                            }
+                            leftIcon={<Mail className="size-4" />}
                         />
 
                         <FormInput
@@ -872,10 +784,7 @@ export default function ComponentsExample() {
                             name="gender"
                             value=""
                             onValueChange={(value) =>
-                                console.log(
-                                    "Selected Gender:",
-                                    value
-                                )
+                                console.log("Selected Gender:", value)
                             }
                             options={[
                                 {
@@ -949,10 +858,7 @@ export default function ComponentsExample() {
                             ]}
                             value=""
                             onValueChange={(value) =>
-                                console.log(
-                                    "Selected Department:",
-                                    value
-                                )
+                                console.log("Selected Department:", value)
                             }
                         />
 
@@ -978,10 +884,7 @@ export default function ComponentsExample() {
                             ]}
                             value=""
                             onValueChange={(value) =>
-                                console.log(
-                                    "Selected Gender:",
-                                    value
-                                )
+                                console.log("Selected Gender:", value)
                             }
                         />
 
@@ -1011,10 +914,7 @@ export default function ComponentsExample() {
                             ]}
                             value=""
                             onValueChange={(value) =>
-                                console.log(
-                                    "Selected Marital Status:",
-                                    value
-                                )
+                                console.log("Selected Marital Status:", value)
                             }
                         />
 
@@ -1044,10 +944,7 @@ export default function ComponentsExample() {
                             ]}
                             value=""
                             onValueChange={(value) =>
-                                console.log(
-                                    "Selected Nationality:",
-                                    value
-                                )
+                                console.log("Selected Nationality:", value)
                             }
                         />
 
@@ -1065,24 +962,17 @@ export default function ComponentsExample() {
                             ]}
                             value={[]}
                         />
-
                     </div>
-
                 </section>
-
 
                 {/* ============================================================
                     TEXTAREA COMPONENTS
                 ============================================================= */}
 
                 <section className={sectionClass}>
-
-                    <h2 className={sectionTitleClass}>
-                        Textarea Components
-                    </h2>
+                    <h2 className={sectionTitleClass}>Textarea Components</h2>
 
                     <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
-
                         <FormTextarea
                             id="address"
                             name="address"
@@ -1099,24 +989,17 @@ export default function ComponentsExample() {
                             placeholder="Enter any additional notes here..."
                             rows={4}
                         />
-
                     </div>
-
                 </section>
-
 
                 {/* ============================================================
                     FILE UPLOAD
                 ============================================================= */}
 
                 <section className={sectionClass}>
-
-                    <h2 className={sectionTitleClass}>
-                        File Upload
-                    </h2>
+                    <h2 className={sectionTitleClass}>File Upload</h2>
 
                     <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
-
                         <FormSingleFileUpload
                             id="profile-picture"
                             name="profile_picture"
@@ -1130,51 +1013,38 @@ export default function ComponentsExample() {
                             accept=".pdf,.jpg,.jpeg,.png"
                             description="Upload one or more PDF, JPG or PNG files (Max 5 MB each)"
                         />
-
                     </div>
-
                 </section>
-
 
                 {/* ============================================================
                     BUTTONS
                 ============================================================= */}
 
                 <section className={sectionClass}>
-
                     <h2 className="mb-8 text-2xl font-bold">
                         UI Components Showcase
                     </h2>
 
                     {/* BUTTON VARIANTS */}
                     <div className="space-y-8">
-
                         <div>
                             <h3 className="mb-4 text-lg font-semibold">
                                 Button Variants
                             </h3>
 
                             <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-
                                 {/* Icon Buttons */}
                                 <div>
-                                    <h4 className="mb-3 text-sm font-medium text-muted-foreground">
+                                    <h4 className="text-muted-foreground mb-3 text-sm font-medium">
                                         Icon Only Buttons
                                     </h4>
 
                                     <div className="flex flex-wrap gap-3">
-
-                                        <Button
-                                            size="icon"
-                                            variant="outline"
-                                        >
+                                        <Button size="icon" variant="outline">
                                             <Save />
                                         </Button>
 
-                                        <Button
-                                            size="icon"
-                                            variant="secondary"
-                                        >
+                                        <Button size="icon" variant="secondary">
                                             <Download />
                                         </Button>
 
@@ -1192,52 +1062,40 @@ export default function ComponentsExample() {
                                         <Button size="icon">
                                             <Edit />
                                         </Button>
-
                                     </div>
                                 </div>
 
-
                                 {/* Small Buttons */}
                                 <div>
-                                    <h4 className="mb-3 text-sm font-medium text-muted-foreground">
+                                    <h4 className="text-muted-foreground mb-3 text-sm font-medium">
                                         Small Buttons
                                     </h4>
 
                                     <div className="flex flex-wrap gap-3">
-
                                         <Button size="sm">
                                             <Save />
                                             Save
                                         </Button>
 
-                                        <Button
-                                            size="sm"
-                                            variant="secondary"
-                                        >
+                                        <Button size="sm" variant="secondary">
                                             <Plus />
                                             Add New
                                         </Button>
 
-                                        <Button
-                                            size="sm"
-                                            variant="outline"
-                                        >
+                                        <Button size="sm" variant="outline">
                                             <Download />
                                             Download
                                         </Button>
-
                                     </div>
                                 </div>
 
-
                                 {/* Medium Buttons */}
                                 <div>
-                                    <h4 className="mb-3 text-sm font-medium text-muted-foreground">
+                                    <h4 className="text-muted-foreground mb-3 text-sm font-medium">
                                         Medium Buttons
                                     </h4>
 
                                     <div className="flex flex-wrap gap-3">
-
                                         <Button>
                                             <Save />
                                             Save Changes
@@ -1252,46 +1110,34 @@ export default function ComponentsExample() {
                                             <Trash2 />
                                             Delete Item
                                         </Button>
-
                                     </div>
                                 </div>
 
-
                                 {/* Large Buttons */}
                                 <div>
-                                    <h4 className="mb-3 text-sm font-medium text-muted-foreground">
+                                    <h4 className="text-muted-foreground mb-3 text-sm font-medium">
                                         Large Buttons
                                     </h4>
 
                                     <div className="flex flex-wrap gap-3">
-
                                         <Button size="lg">
                                             <Save />
                                             Save Document
                                         </Button>
 
-                                        <Button
-                                            size="lg"
-                                            variant="secondary"
-                                        >
+                                        <Button size="lg" variant="secondary">
                                             <Upload />
                                             Upload Files
                                         </Button>
 
-                                        <Button
-                                            size="lg"
-                                            variant="outline"
-                                        >
+                                        <Button size="lg" variant="outline">
                                             <Download />
                                             Download Report
                                         </Button>
-
                                     </div>
                                 </div>
-
                             </div>
                         </div>
-
 
                         {/* MODAL */}
                         <div>
@@ -1300,14 +1146,11 @@ export default function ComponentsExample() {
                             </h3>
 
                             <div className="flex flex-wrap gap-4">
-
                                 <UserModalDemo />
 
                                 <DeleteAlert />
-
                             </div>
                         </div>
-
 
                         {/* TOAST */}
                         <div>
@@ -1316,12 +1159,11 @@ export default function ComponentsExample() {
                             </h3>
 
                             <div className="flex flex-wrap gap-3">
-
                                 <Button
                                     onClick={() =>
                                         appToast.success(
                                             "Success",
-                                            "Operation completed successfully."
+                                            "Operation completed successfully.",
                                         )
                                     }
                                 >
@@ -1333,7 +1175,7 @@ export default function ComponentsExample() {
                                     onClick={() =>
                                         appToast.warning(
                                             "Warning",
-                                            "Please review your input."
+                                            "Please review your input.",
                                         )
                                     }
                                 >
@@ -1345,7 +1187,7 @@ export default function ComponentsExample() {
                                     onClick={() =>
                                         appToast.error(
                                             "Error",
-                                            "Something went wrong."
+                                            "Something went wrong.",
                                         )
                                     }
                                 >
@@ -1356,7 +1198,7 @@ export default function ComponentsExample() {
                                     onClick={() =>
                                         appToast.info(
                                             "Information",
-                                            "New update available."
+                                            "New update available.",
                                         )
                                     }
                                 >
@@ -1365,48 +1207,38 @@ export default function ComponentsExample() {
 
                                 <Button
                                     onClick={() => {
-                                        const id =
-                                            appToast.loading(
-                                                "Uploading...",
-                                                "Please wait."
-                                            );
+                                        const id = appToast.loading(
+                                            "Uploading...",
+                                            "Please wait.",
+                                        );
 
                                         setTimeout(() => {
                                             appToast.dismiss(id);
 
                                             appToast.success(
                                                 "Upload Complete",
-                                                "Files uploaded successfully."
+                                                "Files uploaded successfully.",
                                             );
                                         }, 3000);
                                     }}
                                 >
                                     Loading
                                 </Button>
-
                             </div>
                         </div>
-
                     </div>
-
                 </section>
-
 
                 {/* ============================================================
                     CHECKBOX
                 ============================================================= */}
 
                 <section className={sectionClass}>
-
-                    <h2 className={sectionTitleClass}>
-                        Checkbox
-                    </h2>
+                    <h2 className={sectionTitleClass}>Checkbox</h2>
 
                     <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-
                         <div className="space-y-4">
-
-                            <h3 className="text-sm font-medium text-muted-foreground">
+                            <h3 className="text-muted-foreground text-sm font-medium">
                                 Default
                             </h3>
 
@@ -1419,10 +1251,7 @@ export default function ComponentsExample() {
                             </div>
 
                             <div className="flex items-center gap-3">
-                                <Checkbox
-                                    id="check-2"
-                                    defaultChecked
-                                />
+                                <Checkbox id="check-2" defaultChecked />
 
                                 <Label htmlFor="check-2">
                                     Receive email updates
@@ -1430,14 +1259,9 @@ export default function ComponentsExample() {
                             </div>
 
                             <div className="flex items-center gap-3">
-                                <Checkbox
-                                    id="check-3"
-                                    disabled
-                                />
+                                <Checkbox id="check-3" disabled />
 
-                                <Label htmlFor="check-3">
-                                    Disabled
-                                </Label>
+                                <Label htmlFor="check-3">Disabled</Label>
                             </div>
 
                             <div className="flex items-center gap-3">
@@ -1451,72 +1275,51 @@ export default function ComponentsExample() {
                                     Checked & Disabled
                                 </Label>
                             </div>
-
                         </div>
 
-
                         <div className="space-y-4">
-
-                            <h3 className="text-sm font-medium text-muted-foreground">
+                            <h3 className="text-muted-foreground text-sm font-medium">
                                 Card Style
                             </h3>
 
-                            <label className="flex cursor-pointer items-center gap-4 rounded-xl border p-4 transition hover:border-primary/40">
-
+                            <label className="hover:border-primary/40 flex cursor-pointer items-center gap-4 rounded-xl border p-4 transition">
                                 <Checkbox />
 
                                 <div>
-                                    <p className="font-medium">
-                                        Newsletter
-                                    </p>
+                                    <p className="font-medium">Newsletter</p>
 
-                                    <p className="text-sm text-muted-foreground">
+                                    <p className="text-muted-foreground text-sm">
                                         Receive product news and updates.
                                     </p>
                                 </div>
-
                             </label>
-
                         </div>
-
                     </div>
-
                 </section>
-
 
                 {/* ============================================================
                     RADIO
                 ============================================================= */}
 
                 <section className={sectionClass}>
+                    <h2 className={sectionTitleClass}>Radio Group</h2>
 
-                    <h2 className={sectionTitleClass}>
-                        Radio Group
-                    </h2>
-
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-muted-foreground text-sm">
                         Radio group examples can be added here.
                     </p>
-
                 </section>
-
 
                 {/* ============================================================
                     TABLE
                 ============================================================= */}
 
                 <section className={sectionClass}>
+                    <h2 className={sectionTitleClass}>Table</h2>
 
-                    <h2 className={sectionTitleClass}>
-                        Table
-                    </h2>
-
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-muted-foreground text-sm">
                         Basic table example can be added here.
                     </p>
-
                 </section>
-
             </div>
         </div>
     );

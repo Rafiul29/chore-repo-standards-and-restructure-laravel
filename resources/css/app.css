@@ -1,6 +1,6 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
-@import 'tw-animate-css';
+@import "tw-animate-css";
 
 @source '../views';
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
@@ -9,9 +9,9 @@
 
 @theme {
     --font-sans:
-        'Instrument Sans', ui-sans-serif, system-ui, sans-serif,
-        'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
-        'Noto Color Emoji';
+        "Instrument Sans", "Noto Sans Bengali", ui-sans-serif, system-ui,
+        sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+        "Noto Color Emoji";
 
     --radius-lg: var(--radius);
     --radius-md: calc(var(--radius) - 2px);
@@ -140,4 +140,44 @@
     body {
         @apply bg-background text-foreground;
     }
+}
+
+/* ── Ghorer Bazar custom utilities ───────────────────────────────────────── */
+
+.gb-font-display {
+    font-family: "Noto Sans Bengali", ui-sans-serif, system-ui, sans-serif;
+}
+
+.gb-scrollbar-hide {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.gb-scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+
+.gb-nav-scroll {
+    scroll-behavior: smooth;
+}
+
+@keyframes gb-fade-slide {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.gb-hero-copy {
+    animation: gb-fade-slide 0.5s ease both;
+}
+
+.gb-dot {
+    transition:
+        width 0.25s ease,
+        background-color 0.25s ease;
 }

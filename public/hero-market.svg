@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" fill="none" role="img" aria-label="Fresh daily market produce">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="800" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#EAF5EA"/>
+      <stop offset="0.5" stop-color="#D6ECCB"/>
+      <stop offset="1" stop-color="#B7DCA6"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0" cy="0" r="1" gradientTransform="translate(1000 140) rotate(140) scale(420)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#1F6B3B"/>
+      <stop offset="1" stop-color="#1F6B3B" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1200" height="800" fill="url(#bg)"/>
+  <rect width="1200" height="800" fill="url(#glow)" opacity="0.35"/>
+
+  <!-- Produce basket -->
+  <g transform="translate(430 300)">
+    <!-- Basket -->
+    <path d="M40 360 L520 360 L480 520 L80 520 Z" fill="#B9740A"/>
+    <path d="M40 360 L520 360 L512 400 L48 400 Z" fill="#D9670F"/>
+    <path d="M40 360 L520 360" stroke="#8A4B2A" stroke-width="8" stroke-linecap="round"/>
+    <path d="M150 360 L120 520 M300 360 L300 520 M450 360 L480 520" stroke="#8A4B2A" stroke-width="5" opacity="0.5"/>
+
+    <!-- Tomatoes -->
+    <circle cx="150" cy="300" r="58" fill="#C0472A"/>
+    <circle cx="270" cy="280" r="62" fill="#DC2626"/>
+    <circle cx="390" cy="300" r="58" fill="#C0472A"/>
+    <path d="M270 222 l-14 -22 M270 222 l14 -22 M270 222 l0 -26" stroke="#1F6B3B" stroke-width="7" stroke-linecap="round"/>
+
+    <!-- Eggplant -->
+    <path d="M470 250 C 520 250 540 320 500 380 C 470 420 430 380 440 320 C 446 280 450 250 470 250 Z" fill="#5B4A96"/>
+    <path d="M470 250 l-6 -24 M470 250 l8 -20" stroke="#1F6B3B" stroke-width="6" stroke-linecap="round"/>
+
+    <!-- Leaves -->
+    <path d="M90 250 C 50 210 80 150 140 160 C 130 220 150 270 90 250 Z" fill="#1F6B3B" opacity="0.85"/>
+    <path d="M350 240 C 310 200 340 140 400 150 C 390 210 410 260 350 240 Z" fill="#1F6B3B" opacity="0.8"/>
+  </g>
+
+  <!-- Floating dots -->
+  <circle cx="180" cy="180" r="12" fill="#F4801F" opacity="0.6"/>
+  <circle cx="1040" cy="600" r="16" fill="#B9740A" opacity="0.5"/>
+  <circle cx="900" cy="160" r="10" fill="#1F6B3B" opacity="0.5"/>
+  <circle cx="250" cy="640" r="9" fill="#C0472A" opacity="0.5"/>
+
+  <!-- Brand mark -->
+  <g transform="translate(90 90)">
+    <circle cx="40" cy="40" r="40" fill="#F4801F"/>
+    <path d="M40 18 C 52 18 60 30 60 44 C 60 54 52 62 40 62 C 28 62 20 54 20 44 C 20 30 28 18 40 18 Z" fill="#fff" opacity="0.9"/>
+  </g>
+</svg>

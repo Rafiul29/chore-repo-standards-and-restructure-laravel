@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" fill="none" role="img" aria-label="Ghorer Bazar organic food marketplace hero">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="800" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FCEDD4"/>
+      <stop offset="0.5" stop-color="#FBDBA4"/>
+      <stop offset="1" stop-color="#F7C36B"/>
+    </linearGradient>
+    <radialGradient id="glowOrange" cx="0" cy="0" r="1" gradientTransform="translate(980 120) rotate(140) scale(420)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#F4801F"/>
+      <stop offset="1" stop-color="#F4801F" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowGreen" cx="0" cy="0" r="1" gradientTransform="translate(120 680) rotate(140) scale(360)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#1F6B3B"/>
+      <stop offset="1" stop-color="#1F6B3B" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1200" height="800" fill="url(#bg)"/>
+  <rect width="1200" height="800" fill="url(#glowOrange)" opacity="0.4"/>
+  <rect width="1200" height="800" fill="url(#glowGreen)" opacity="0.3"/>
+
+  <!-- Honey jar -->
+  <g transform="translate(820 230)">
+    <rect x="0" y="40" width="220" height="240" rx="28" fill="#FDF6EC" opacity="0.95"/>
+    <rect x="0" y="40" width="220" height="60" rx="28" fill="#F4801F" opacity="0.9"/>
+    <rect x="55" y="0" width="110" height="60" rx="14" fill="#1F6B3B"/>
+    <rect x="30" y="150" width="160" height="100" rx="16" fill="#F7C36B"/>
+    <text x="110" y="205" font-family="Segoe UI, Arial, sans-serif" font-size="34" font-weight="700" fill="#1F2A22" text-anchor="middle">HONEY</text>
+    <circle cx="110" cy="255" r="8" fill="#1F6B3B"/>
+  </g>
+
+  <!-- Leaf cluster -->
+  <g transform="translate(180 470)" stroke="#1F6B3B" stroke-width="6" fill="none" opacity="0.85">
+    <path d="M40 60 C -10 20 20 -40 70 -30 C 60 30 80 70 40 60 Z" fill="#1F6B3B" opacity="0.25"/>
+    <path d="M120 80 C 70 50 90 -10 140 0 C 130 50 150 90 120 80 Z" fill="#1F6B3B" opacity="0.2"/>
+    <path d="M80 -10 C 30 -50 60 -110 110 -100 C 100 -40 120 0 80 -10 Z" fill="#1F6B3B" opacity="0.22"/>
+  </g>
+
+  <!-- Floating spice dots -->
+  <circle cx="640" cy="140" r="10" fill="#C0472A" opacity="0.7"/>
+  <circle cx="720" cy="600" r="14" fill="#B9740A" opacity="0.6"/>
+  <circle cx="500" cy="640" r="8" fill="#5B4A96" opacity="0.6"/>
+  <circle cx="1040" cy="560" r="12" fill="#1F6B3B" opacity="0.55"/>
+
+  <!-- Brand mark -->
+  <g transform="translate(90 90)">
+    <circle cx="40" cy="40" r="40" fill="#F4801F"/>
+    <path d="M40 18 C 52 18 60 30 60 44 C 60 54 52 62 40 62 C 28 62 20 54 20 44 C 20 30 28 18 40 18 Z" fill="#fff" opacity="0.9"/>
+  </g>
+</svg>
