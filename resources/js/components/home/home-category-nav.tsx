@@ -7,10 +7,12 @@ const categoryNav = [
     { label: "Dates", dropdown: true },
     { label: "Spices", dropdown: true },
     { label: "Nuts & Seeds", dropdown: true },
-    { label: "Beverages", dropdown: true },
-    { label: "Rice, Flour & Lentils", dropdown: true },
-    { label: "Certified Products" },
-    { label: "Pickles" },
+    { label: "Beverage", dropdown: true },
+    { label: "Rice", dropdown: false },
+    { label: "Flours & Lentils", dropdown: true },
+    { label: "Certified" },
+    { label: "Pickle" },
+    { label: "Tabaya" },
 ];
 
 export function HomeCategoryNav() {
