@@ -6,7 +6,7 @@ import {
     SlidersHorizontal,
 } from "lucide-react";
 
-import { ProductCard } from "@/components/product-card";
+import { ProductCard } from "@/components/products/product-card";
 import { Button } from "@/components/ui/button";
 import type { Category, PaginatedMeta, Product } from "@/types";
 

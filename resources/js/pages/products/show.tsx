@@ -2,7 +2,7 @@ import { Head, Link, usePage } from "@inertiajs/react";
 import { Leaf, Minus, Plus, Share2, ShoppingBag, Truck } from "lucide-react";
 import { useState } from "react";
 
-import { ProductCard } from "@/components/product-card";
+import { ProductCard } from "@/components/products/product-card";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/contexts/CartContext";
 import type { Category, Product } from "@/types";

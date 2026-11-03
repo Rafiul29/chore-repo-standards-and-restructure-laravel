@@ -98,7 +98,13 @@ export interface FormSelectSearchMultipleProps extends FormSelectSearchBaseProps
     onValueChange?: (values: string[]) => void;
     /** Maximum number of selectable options. */
     maxSelected?: number;
-    /** Show at most this many chips, then "+N". */
+    /**
+     * "inline" (default): chips stay on ONE line. Chips that do not fit collapse
+     * into a "+N" button, and move back into view when a chip is removed.
+     * "wrap": chips wrap onto extra lines and the field grows taller.
+     */
+    chipsLayout?: "inline" | "wrap";
+    /** Optional hard cap on visible chips (on top of the automatic fit). */
     maxVisibleChips?: number;
 }
 
@@ -111,6 +117,10 @@ export type FormSelectSearchProps =
 /* -------------------------------------------------------------------------- */
 
 const EMPTY_OPTIONS: ComboboxOption[] = [];
+
+/** useLayoutEffect warns during server rendering, so fall back to useEffect there. */
+const useIsomorphicLayoutEffect =
+    typeof window !== "undefined" ? React.useLayoutEffect : React.useEffect;
 
 /** Turns anything the parent might pass (string, array, null, junk) into a clean string[]. */
 function normalizeValues(
@@ -128,10 +138,106 @@ function normalizeValues(
     return multiple ? unique : unique.slice(0, 1);
 }
 
+/**
+ * How many chips fit on one line. When some do not fit, room is kept for the
+ * "+N" button. At least one chip is always shown (it truncates if it is too wide).
+ */
+function computeVisibleCount(
+    widths: number[],
+    badgeWidth: number,
+    available: number,
+    gap: number,
+): number {
+    const total = widths.length;
+
+    if (total === 0) {
+        return 0;
+    }
+
+    const allWidth = widths.reduce((sum, width) => sum + width, 0) + gap * (total - 1);
+
+    if (allWidth <= available) {
+        return total;
+    }
+
+    let used = 0;
+    let count = 0;
+
+    for (let index = 0; index < total; index++) {
+        const next = used + (index > 0 ? gap : 0) + widths[index];
+
+        if (next + gap + badgeWidth > available) {
+            break;
+        }
+
+        used = next;
+        count++;
+    }
+
+    return Math.max(1, count);
+}
+
 interface ResolvedOption extends ComboboxOption {
     /** The selected value is not in `options` (stale, removed, or still loading). */
     missing?: boolean;
 }
+
+/** One selected value. `measure` renders an invisible twin used only to measure width. */
+function ChipView({
+    option,
+    removable,
+    removeLabel,
+    onRemove,
+    measure = false,
+}: {
+    option: ResolvedOption;
+    removable: boolean;
+    removeLabel: string;
+    onRemove?: (value: string) => void;
+    measure?: boolean;
+}) {
+    const Tag: React.ElementType = measure ? "span" : "li";
+
+    return (
+        <Tag
+            className={cn(
+                "bg-secondary text-secondary-foreground inline-flex items-center gap-0.5",
+                "rounded-sm py-0.5 pl-1.5 text-xs",
+                removable ? "pr-0.5" : "pr-1.5",
+                measure ? "max-w-none shrink-0" : "max-w-full min-w-0",
+                option.missing && "text-muted-foreground italic",
+            )}
+        >
+            <span
+                className={cn(measure ? "whitespace-nowrap" : "min-w-0 truncate")}
+                title={measure ? undefined : option.label}
+            >
+                {option.label}
+            </span>
+
+            {removable &&
+                (measure ? (
+                    <span aria-hidden="true" className="size-4 shrink-0" />
+                ) : (
+                    <button
+                        type="button"
+                        aria-label={`${removeLabel} ${option.label}`}
+                        onClick={() => onRemove?.(option.value)}
+                        className={cn(
+                            "pointer-events-auto relative z-10 flex size-4 shrink-0 items-center justify-center rounded-sm",
+                            "text-muted-foreground hover:bg-foreground/10 hover:text-foreground",
+                            "focus-visible:ring-ring/50 outline-none focus-visible:ring-2 focus-visible:ring-inset",
+                        )}
+                    >
+                        <X aria-hidden="true" className="h-3 w-3" />
+                    </button>
+                ))}
+        </Tag>
+    );
+}
+
+const badgeClassName =
+    "bg-secondary text-secondary-foreground rounded-sm px-1.5 py-0.5 text-xs";
 
 /* -------------------------------------------------------------------------- */
 /* Component                                                                  */
@@ -162,6 +268,7 @@ export function BrandFieldSearchSelect(props: FormSelectSearchProps) {
     const multiple = props.multiple === true;
     const maxSelected = props.multiple ? props.maxSelected : undefined;
     const maxVisibleChips = props.multiple ? props.maxVisibleChips : undefined;
+    const inline = props.multiple ? (props.chipsLayout ?? "inline") === "inline" : false;
 
     const labels = React.useMemo(
         () => ({ ...defaultLabels, ...labelOverrides }),
@@ -176,9 +283,12 @@ export function BrandFieldSearchSelect(props: FormSelectSearchProps) {
     const describedBy = error ? errorId : helperText ? helperId : undefined;
 
     const triggerRef = React.useRef<HTMLButtonElement>(null);
+    const chipsRef = React.useRef<HTMLUListElement>(null);
+    const measureRef = React.useRef<HTMLDivElement>(null);
 
     const [open, setOpen] = React.useState(false);
     const [search, setSearch] = React.useState("");
+    const [fitCount, setFitCount] = React.useState<number | null>(null);
     const isOpen = open && !disabled;
 
     /* ------------------------------ options -------------------------------- */
@@ -255,6 +365,53 @@ export function BrandFieldSearchSelect(props: FormSelectSearchProps) {
     React.useEffect(() => {
         commitRef.current = commit;
     });
+
+    /* ------------------- one-line chips: measure what fits ------------------ */
+
+    const recalcFit = React.useCallback(() => {
+        const list = chipsRef.current;
+        const measure = measureRef.current;
+
+        if (!list || !measure) {
+            return;
+        }
+
+        // The invisible twin holds one node per chip, then one "+N" probe last.
+        const nodes = Array.from(measure.children) as HTMLElement[];
+        const badge = nodes.pop();
+        const widths = nodes.map((node) => node.getBoundingClientRect().width);
+        const gap = parseFloat(getComputedStyle(list).columnGap) || 4;
+
+        const next = computeVisibleCount(
+            widths,
+            badge?.getBoundingClientRect().width ?? 0,
+            list.getBoundingClientRect().width,
+            gap,
+        );
+
+        setFitCount((previous) => (previous === next ? previous : next));
+    }, []);
+
+    // Re-measure whenever the selected chips change (adding or removing one)...
+    useIsomorphicLayoutEffect(() => {
+        if (inline && hasValue) {
+            recalcFit();
+        }
+    }, [inline, hasValue, selectedOptions, recalcFit]);
+
+    // ...and whenever the field is resized.
+    useIsomorphicLayoutEffect(() => {
+        const list = chipsRef.current;
+
+        if (!inline || !hasValue || !list || typeof ResizeObserver === "undefined") {
+            return;
+        }
+
+        const observer = new ResizeObserver(() => recalcFit());
+        observer.observe(list);
+
+        return () => observer.disconnect();
+    }, [inline, hasValue, recalcFit]);
 
     /* --------------------------- auto-select one --------------------------- */
 
@@ -384,12 +541,20 @@ export function BrandFieldSearchSelect(props: FormSelectSearchProps) {
     const showClear =
         clearable && !disabled && (multiple ? selected.length > 1 : hasValue);
 
-    const visibleChips =
-        maxVisibleChips !== undefined
-            ? selectedOptions.slice(0, Math.max(0, maxVisibleChips))
-            : selectedOptions;
+    // Inline: as many chips as fit on the line. Wrap: all of them. Either way,
+    // `maxVisibleChips` can cap the number further.
+    const fitLimit = inline
+        ? Math.min(fitCount ?? selectedOptions.length, selectedOptions.length)
+        : selectedOptions.length;
 
-    const hiddenChipCount = selectedOptions.length - visibleChips.length;
+    const visibleCount = Math.max(
+        0,
+        Math.min(fitLimit, maxVisibleChips ?? Number.POSITIVE_INFINITY),
+    );
+
+    const visibleChips = selectedOptions.slice(0, visibleCount);
+    const hiddenChips = selectedOptions.slice(visibleCount);
+    const hiddenChipCount = hiddenChips.length;
 
     const triggerText = multiple ? (
         hasValue ? (
@@ -428,7 +593,7 @@ export function BrandFieldSearchSelect(props: FormSelectSearchProps) {
                     className={cn(
                         "border-input relative flex w-full min-w-0 items-center rounded-md border bg-transparent",
                         "shadow-xs transition-colors focus-within:border-primary",
-                        multiple ? "min-h-8" : "h-8",
+                        multiple && !inline ? "min-h-8" : "h-8",
                         error &&
                             "border-destructive focus-within:border-destructive",
                         disabled && "cursor-not-allowed opacity-50",
@@ -473,63 +638,86 @@ export function BrandFieldSearchSelect(props: FormSelectSearchProps) {
 
                     {/* Multiple: one chip per value, each with its own close button. */}
                     {multiple && hasValue && (
-                        <ul
-                            aria-label={labels.selectedCount(selected.length)}
+                        <div
                             className={cn(
-                                "pointer-events-none relative flex min-w-0 flex-1 flex-wrap items-center gap-1 py-1 pl-2",
+                                "pointer-events-none relative flex min-w-0 flex-1 items-center pl-2",
                                 showClear ? "pr-14" : "pr-8",
+                                !inline && "py-1",
                             )}
                         >
-                            {visibleChips.map((option) => (
-                                <li
-                                    key={option.value}
-                                    className={cn(
-                                        "bg-secondary text-secondary-foreground inline-flex max-w-full items-center gap-0.5",
-                                        "rounded-sm py-0.5 pr-0.5 pl-1.5 text-xs",
-                                        option.missing &&
-                                            "text-muted-foreground italic",
-                                    )}
-                                >
-                                    <span
-                                        className="min-w-0 truncate"
-                                        title={option.label}
-                                    >
-                                        {option.label}
-                                    </span>
+                            <ul
+                                ref={chipsRef}
+                                aria-label={labels.selectedCount(selected.length)}
+                                className={cn(
+                                    "flex min-w-0 flex-1 items-center gap-1",
+                                    inline
+                                        ? "flex-nowrap overflow-hidden"
+                                        : "flex-wrap",
+                                )}
+                            >
+                                {visibleChips.map((option) => (
+                                    <ChipView
+                                        key={option.value}
+                                        option={option}
+                                        removable={!disabled}
+                                        removeLabel={labels.remove}
+                                        onRemove={handleRemove}
+                                    />
+                                ))}
 
-                                    {!disabled && (
+                                {hiddenChipCount > 0 && (
+                                    <li className="shrink-0">
+                                        {/* "+N": click it to open the list and see every selected value. */}
                                         <button
                                             type="button"
-                                            aria-label={`${labels.remove} ${option.label}`}
-                                            onClick={() =>
-                                                handleRemove(option.value)
-                                            }
+                                            aria-label={labels.moreSelected(
+                                                hiddenChipCount,
+                                            )}
+                                            title={hiddenChips
+                                                .map((chip) => chip.label)
+                                                .join(", ")}
+                                            disabled={disabled}
+                                            onClick={() => handleOpenChange(true)}
                                             className={cn(
-                                                "pointer-events-auto relative z-10 flex size-4 shrink-0 items-center justify-center rounded-sm",
-                                                "text-muted-foreground hover:bg-foreground/10 hover:text-foreground",
-                                                "focus-visible:ring-ring/50 outline-none focus-visible:ring-2",
+                                                badgeClassName,
+                                                "pointer-events-auto relative z-10 hover:bg-secondary/80",
+                                                "focus-visible:ring-ring/50 outline-none focus-visible:ring-2 focus-visible:ring-inset",
                                             )}
                                         >
-                                            <X
-                                                aria-hidden="true"
-                                                className="h-3 w-3"
-                                            />
+                                            +{hiddenChipCount}
                                         </button>
-                                    )}
-                                </li>
-                            ))}
+                                    </li>
+                                )}
+                            </ul>
 
-                            {hiddenChipCount > 0 && (
-                                <li className="bg-secondary text-secondary-foreground rounded-sm px-1.5 py-0.5 text-xs">
-                                    <span aria-hidden="true">
-                                        +{hiddenChipCount}
+                            {/* Invisible twin of every chip (+ a "+N" probe) used to measure widths. */}
+                            {inline && (
+                                <div
+                                    ref={measureRef}
+                                    aria-hidden="true"
+                                    className="invisible pointer-events-none absolute top-0 left-2 flex w-max gap-1"
+                                >
+                                    {selectedOptions.map((option) => (
+                                        <ChipView
+                                            key={option.value}
+                                            option={option}
+                                            removable={!disabled}
+                                            removeLabel={labels.remove}
+                                            measure
+                                        />
+                                    ))}
+
+                                    <span
+                                        className={cn(
+                                            badgeClassName,
+                                            "shrink-0 whitespace-nowrap",
+                                        )}
+                                    >
+                                        +{selectedOptions.length}
                                     </span>
-                                    <span className="sr-only">
-                                        {labels.moreSelected(hiddenChipCount)}
-                                    </span>
-                                </li>
+                                </div>
                             )}
-                        </ul>
+                        </div>
                     )}
 
                     {showClear && (

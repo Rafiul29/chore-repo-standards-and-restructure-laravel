@@ -1,9 +1,9 @@
 import { Link } from '@inertiajs/react';
 import { BookOpen, FolderGit2, LayoutGrid } from 'lucide-react';
-import AppLogo from '@/components/app-logo';
-import { NavFooter } from '@/components/nav-footer';
-import { NavMain } from '@/components/nav-main';
-import { NavUser } from '@/components/nav-user';
+import AppLogo from '@/components/dashboard/app-logo';
+import { NavFooter } from '@/components/dashboard/nav-footer';
+import { NavMain } from '@/components/dashboard/nav-main';
+import { NavUser } from '@/components/dashboard/nav-user';
 import {
     Sidebar,
     SidebarContent,
@@ -12,6 +12,7 @@ import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
+    SidebarSeparator,
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
 import type { NavItem } from '@/types';
@@ -40,7 +41,7 @@ const footerNavItems: NavItem[] = [
 export function AppSidebar() {
     return (
         <Sidebar collapsible="icon" variant="inset">
-            <SidebarHeader>
+            <SidebarHeader className="border-sidebar-border/70 border-b">
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
@@ -56,8 +57,9 @@ export function AppSidebar() {
                 <NavMain items={mainNavItems} />
             </SidebarContent>
 
-            <SidebarFooter>
+            <SidebarFooter className="border-sidebar-border/70 border-t border-b">
                 <NavFooter items={footerNavItems} className="mt-auto" />
+                <SidebarSeparator className="my-1" />
                 <NavUser />
             </SidebarFooter>
         </Sidebar>

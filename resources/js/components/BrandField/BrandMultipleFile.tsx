@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import * as React from 'react';
-import { FileText, Files, UploadCloud, X } from 'lucide-react';
+import * as React from "react";
+import { FileText, Files, UploadCloud, X } from "lucide-react";
 
-import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 
 export interface FormMultipleFileUploadProps {
     id?: string;
@@ -33,10 +33,10 @@ export function FormMultipleFileUpload({
     name,
     label,
     required = false,
-    accept = '*',
+    accept = "*",
     disabled = false,
     className,
-    description = 'Select files or drag them here',
+    description = "Select files or drag them here",
     value,
     onChange,
 }: FormMultipleFileUploadProps) {
@@ -59,7 +59,7 @@ export function FormMultipleFileUpload({
      * Generate unique file key
      */
     const getFileKey = (file: File | string) =>
-        typeof file === 'string'
+        typeof file === "string"
             ? file
             : `${file.name}-${file.size}-${file.lastModified}`;
 
@@ -101,7 +101,7 @@ export function FormMultipleFileUpload({
         /**
          * Allow selecting the same file again
          */
-        event.target.value = '';
+        event.target.value = "";
     };
 
     /**
@@ -128,7 +128,7 @@ export function FormMultipleFileUpload({
         onChange?.([]);
 
         if (inputRef.current) {
-            inputRef.current.value = '';
+            inputRef.current.value = "";
         }
     };
 
@@ -155,15 +155,15 @@ export function FormMultipleFileUpload({
      * Format accepted file types
      */
     const formatAccept = () => {
-        if (accept === '*') {
-            return 'Any file';
+        if (accept === "*") {
+            return "Any file";
         }
 
-        return accept.replaceAll('.', '').replaceAll(',', ', ').toUpperCase();
+        return accept.replaceAll(".", "").replaceAll(",", ", ").toUpperCase();
     };
 
     return (
-        <div className={cn('space-y-2', className)}>
+        <div className={cn("space-y-2", className)}>
             {/* Label */}
             {label && (
                 <Label htmlFor={id} className="text-sm font-medium">
@@ -179,23 +179,23 @@ export function FormMultipleFileUpload({
             <div
                 onClick={openFilePicker}
                 className={cn(
-                    'group border-muted-foreground/30 bg-muted/20 relative flex cursor-pointer flex-col items-center justify-center overflow-hidden rounded-xl border-2 border-dashed px-6 py-8 text-center transition-all',
+                    "group border-muted-foreground/30 bg-muted/20 relative flex cursor-pointer flex-col items-center justify-center overflow-hidden rounded-xl border-2 border-dashed px-6 py-8 text-center transition-all",
 
-                    'hover:border-primary/70 hover:bg-primary/[0.03]',
+                    "hover:border-primary/70 hover:bg-primary/[0.03]",
 
-                    'dark:hover:bg-primary/[0.05]',
+                    "dark:hover:bg-primary/[0.05]",
 
-                    disabled && 'cursor-not-allowed opacity-50',
+                    disabled && "cursor-not-allowed opacity-50",
                 )}
             >
                 {/* Multiple file badge */}
                 <span
                     className={cn(
-                        'absolute top-0 right-0 inline-flex items-center gap-1.5',
-                        'rounded-tr-xl rounded-bl-lg',
-                        'border-primary/20 border-b border-l',
-                        'bg-primary/10 px-3 py-1.5',
-                        'text-primary text-[11px] font-semibold',
+                        "absolute top-0 right-0 inline-flex items-center gap-1.5",
+                        "rounded-tr-xl rounded-bl-lg",
+                        "border-primary/20 border-b border-l",
+                        "bg-primary/10 px-3 py-1.5",
+                        "text-primary text-[11px] font-semibold",
                     )}
                 >
                     <Files className="h-3.5 w-3.5" />
@@ -222,7 +222,7 @@ export function FormMultipleFileUpload({
 
                 {/* Accepted files */}
                 <p className="text-muted-foreground mt-2 text-[11px]">
-                    Allowed files:{' '}
+                    Allowed files:{" "}
                     <span className="font-medium">{formatAccept()}</span>
                 </p>
 
@@ -256,10 +256,10 @@ export function FormMultipleFileUpload({
                                 </p>
 
                                 <p className="text-muted-foreground text-[11px]">
-                                    Total{' '}
+                                    Total{" "}
                                     <span className="text-primary font-semibold">
                                         {selectedFiles.length}
-                                    </span>{' '}
+                                    </span>{" "}
                                     files
                                 </p>
                             </div>
@@ -295,20 +295,20 @@ export function FormMultipleFileUpload({
                                     <div className="min-w-0">
                                         <p
                                             title={
-                                                typeof file === 'string'
-                                                    ? file.split('/').pop()
+                                                typeof file === "string"
+                                                    ? file.split("/").pop()
                                                     : file.name
                                             }
                                             className="truncate text-xs font-medium"
                                         >
-                                            {typeof file === 'string'
-                                                ? file.split('/').pop()
+                                            {typeof file === "string"
+                                                ? file.split("/").pop()
                                                 : file.name}
                                         </p>
 
                                         <p className="text-muted-foreground mt-0.5 text-[11px]">
-                                            {typeof file === 'string'
-                                                ? 'Existing File'
+                                            {typeof file === "string"
+                                                ? "Existing File"
                                                 : formatFileSize(file.size)}
                                         </p>
                                     </div>
@@ -324,7 +324,7 @@ export function FormMultipleFileUpload({
                                         handleRemove(index);
                                     }}
                                     className="hover:bg-destructive/10 hover:text-destructive h-8 w-8 shrink-0"
-                                    aria-label={`${typeof file === 'string' ? 'file' : file.name} remove`}
+                                    aria-label={`${typeof file === "string" ? "file" : file.name} remove`}
                                 >
                                     <X className="h-4 w-4" />
                                 </Button>
