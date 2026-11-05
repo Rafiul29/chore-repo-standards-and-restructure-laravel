@@ -11,23 +11,11 @@ import {
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { FILE_UPLOAD } from "../constants/file-upload";
+import { FILE_UPLOAD, formatUploadSize, UploadFileValue } from "../constants/file-upload";
 
 
 
-export type UploadFileValue = File | string;
 
-// ==========================================
-// HELPERS
-// ==========================================
-
-export const formatUploadSize = (bytes: number): string => {
-  if (!Number.isFinite(bytes) || bytes < 0) {
-    return "0 MB";
-  }
-
-  return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
-};
 
 /**
  * Only actual File instances and non-empty file paths
@@ -115,7 +103,7 @@ export interface FormFileUploadProps {
 // MAIN COMPONENT
 // ==========================================
 
-export function FormSingleFileUpload({
+export function BrandSingleFile({
   id,
   label,
   name,
@@ -244,12 +232,12 @@ export function FormSingleFileUpload({
   // ==========================================
 
   return (
-    <div className={cn("w-full min-w-0 space-y-2", className)}>
+    <div className={cn("w-full min-w-0 space-y-1", className)}>
       {/* Label */}
       {label && (
         <Label
           htmlFor={id}
-          className="block text-sm font-medium"
+          className="block text-[13px] font-semibold text-foreground"
         >
           {label}
 
@@ -285,7 +273,7 @@ export function FormSingleFileUpload({
           "cursor-not-allowed opacity-50",
         )}
       >
-        <UploadCloud className="mb-2 h-7 w-7 text-muted-foreground" />
+        <UploadCloud className="mb-2 h-7 w-7 text-primary" />
 
         <p className="text-xs font-medium">
           {hasSelectedFile
@@ -297,8 +285,12 @@ export function FormSingleFileUpload({
           সর্বোচ্চ {maxFileSizeMB} MB
         </p>
 
+
         <p className="mt-1 break-words text-[11px] text-muted-foreground">
-          {accept.replaceAll(".", "").toUpperCase()}
+          গ্রহণযোগ্য ফাইল:
+          <span className="ml-1 rounded bg-primary/10 px-2 py-0.5 font-medium text-primary">
+            {accept.replaceAll(".", "").toUpperCase()}
+          </span>
         </p>
 
         <input

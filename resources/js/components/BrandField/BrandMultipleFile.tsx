@@ -1,345 +1,349 @@
 "use client";
 
 import * as React from "react";
-import { FileText, Files, UploadCloud, X } from "lucide-react";
+import {
+  AlertCircle,
+  FileText,
+  Files,
+  UploadCloud,
+  X,
+} from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { FILE_UPLOAD, UploadFileValue, validateUploadFile } from "../constants/file-upload";
+
+
 
 export interface FormMultipleFileUploadProps {
-    id?: string;
-    name?: string;
-    label?: string;
-    required?: boolean;
-    accept?: string;
-    disabled?: boolean;
-    className?: string;
-    description?: string;
-
-    /**
-     * Controlled value
-     */
-    value?: (File | string)[];
-
-    /**
-     * Returns (File | string)[] directly
-     */
-    onChange?: (files: (File | string)[]) => void;
+  id?: string;
+  name?: string;
+  label?: string;
+  required?: boolean;
+  accept?: string;
+  disabled?: boolean;
+  className?: string;
+  description?: string;
+  value?: UploadFileValue[];
+  onChange?: (files: UploadFileValue[]) => void;
+  maxFiles?: number;
+  maxFileSizeMB?: number;
 }
 
-export function FormMultipleFileUpload({
-    id,
-    name,
-    label,
-    required = false,
-    accept = "*",
-    disabled = false,
-    className,
-    description = "Select files or drag them here",
-    value,
-    onChange,
+const getFileKey = (file: UploadFileValue) =>
+  typeof file === "string"
+    ? file
+    : `${file.name}-${file.size}-${file.lastModified}`;
+
+export function BrandMultipleFile({
+  id,
+  name,
+  label,
+  required = false,
+  accept = FILE_UPLOAD.DOCUMENT_ACCEPT,
+  disabled = false,
+  className,
+  description = "ফাইল নির্বাচন করুন অথবা এখানে টেনে আনুন",
+  value,
+  onChange,
+  maxFiles = FILE_UPLOAD.MAX_FILES,
+  maxFileSizeMB = FILE_UPLOAD.MAX_SIZE_MB,
 }: FormMultipleFileUploadProps) {
-    const inputRef = React.useRef<HTMLInputElement>(null);
+  const inputRef = React.useRef<HTMLInputElement>(null);
 
-    const [selectedFiles, setSelectedFiles] = React.useState<(File | string)[]>(
-        value ?? [],
-    );
+  const [internalFiles, setInternalFiles] =
+    React.useState<UploadFileValue[]>(value ?? []);
 
-    /**
-     * Sync controlled value
-     */
-    React.useEffect(() => {
-        if (value !== undefined) {
-            setSelectedFiles(value);
-        }
-    }, [value]);
+  const [validationError, setValidationError] =
+    React.useState<string | null>(null);
 
-    /**
-     * Generate unique file key
-     */
-    const getFileKey = (file: File | string) =>
-        typeof file === "string"
-            ? file
-            : `${file.name}-${file.size}-${file.lastModified}`;
+  const selectedFiles =
+    value !== undefined ? value : internalFiles;
 
-    /**
-     * Open file picker
-     */
-    const openFilePicker = () => {
-        if (disabled) {
-            return;
-        }
+  const selectedCount = selectedFiles.length;
+  const remaining = Math.max(0, maxFiles - selectedCount);
+  const isFull = selectedCount >= maxFiles;
 
-        inputRef.current?.click();
-    };
+  const updateFiles = (files: UploadFileValue[]) => {
+    if (value === undefined) {
+      setInternalFiles(files);
+    }
 
-    /**
-     * Handle file selection
-     */
-    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const files = Array.from(event.target.files ?? []);
+    onChange?.(files);
+  };
 
-        if (files.length === 0) {
-            return;
-        }
+  const validateAndAddFiles = (incomingFiles: File[]) => {
+    if (disabled || incomingFiles.length === 0) return;
 
-        setSelectedFiles((previousFiles) => {
-            const existingKeys = new Set(previousFiles.map(getFileKey));
+    const errors = incomingFiles
+      .map((file) =>
+        validateUploadFile(file, accept, maxFileSizeMB),
+      )
+      .filter((message): message is string => Boolean(message));
 
-            const newFiles = files.filter(
-                (file) => !existingKeys.has(getFileKey(file)),
-            );
+    if (errors.length > 0) {
+      setValidationError(errors.join("\n"));
+      return;
+    }
 
-            const updatedFiles = [...previousFiles, ...newFiles];
+    const keys = new Set(selectedFiles.map(getFileKey));
 
-            onChange?.(updatedFiles);
+    const uniqueFiles = incomingFiles.filter((file) => {
+      const key = getFileKey(file);
 
-            return updatedFiles;
-        });
+      if (keys.has(key)) return false;
 
-        /**
-         * Allow selecting the same file again
-         */
-        event.target.value = "";
-    };
+      keys.add(key);
+      return true;
+    });
 
-    /**
-     * Remove single file
-     */
-    const handleRemove = (index: number) => {
-        setSelectedFiles((previousFiles) => {
-            const updatedFiles = previousFiles.filter(
-                (_, fileIndex) => fileIndex !== index,
-            );
+    if (uniqueFiles.length === 0) {
+      setValidationError(
+        "নির্বাচিত ফাইলগুলো ইতোমধ্যে যুক্ত করা হয়েছে।",
+      );
+      return;
+    }
 
-            onChange?.(updatedFiles);
+    const total = selectedCount + uniqueFiles.length;
 
-            return updatedFiles;
-        });
-    };
+    if (total > maxFiles) {
+      setValidationError(
+        `সর্বোচ্চ ${maxFiles}টি ফাইল নির্বাচন করতে পারবেন। বর্তমানে ${selectedCount}টি আছে। আরও ${remaining}টি যোগ করা যাবে।`,
+      );
+      return;
+    }
 
-    /**
-     * Remove all files
-     */
-    const handleRemoveAll = () => {
-        setSelectedFiles([]);
+    setValidationError(null);
+    updateFiles([...selectedFiles, ...uniqueFiles]);
+  };
 
-        onChange?.([]);
+  const handleFileChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const files = Array.from(event.currentTarget.files ?? []);
 
-        if (inputRef.current) {
-            inputRef.current.value = "";
-        }
-    };
+    event.currentTarget.value = "";
 
-    /**
-     * Format file size
-     */
-    const formatFileSize = (bytes: number) => {
-        if (bytes < 1024) {
-            return `${bytes} Bytes`;
-        }
+    validateAndAddFiles(files);
+  };
 
-        if (bytes < 1024 * 1024) {
-            return `${(bytes / 1024).toFixed(1)} KB`;
-        }
+  const handleDrop = (
+    event: React.DragEvent<HTMLDivElement>,
+  ) => {
+    event.preventDefault();
+    event.stopPropagation();
 
-        if (bytes < 1024 * 1024 * 1024) {
-            return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-        }
+    if (!disabled) {
+      validateAndAddFiles(Array.from(event.dataTransfer.files));
+    }
+  };
 
-        return `${(bytes / (1024 * 1024 * 1024)).toFixed(1)} GB`;
-    };
+  const openPicker = () => {
+    if (disabled) return;
 
-    /**
-     * Format accepted file types
-     */
-    const formatAccept = () => {
-        if (accept === "*") {
-            return "Any file";
-        }
+    if (isFull) {
+      setValidationError(
+        `সর্বোচ্চ ${maxFiles}টি ফাইল নির্বাচন করা হয়েছে। নতুন ফাইল যোগ করতে আগে একটি মুছে ফেলুন।`,
+      );
+      return;
+    }
 
-        return accept.replaceAll(".", "").replaceAll(",", ", ").toUpperCase();
-    };
+    inputRef.current?.click();
+  };
 
-    return (
-        <div className={cn("space-y-2", className)}>
-            {/* Label */}
-            {label && (
-                <Label htmlFor={id} className="text-sm font-medium">
-                    {label}
+  const handleRemove = (index: number) => {
+    if (disabled) return;
 
-                    {required && (
-                        <span className="text-destructive ml-1">*</span>
-                    )}
-                </Label>
-            )}
+    updateFiles(selectedFiles.filter((_, i) => i !== index));
+    setValidationError(null);
+  };
 
-            {/* Upload area */}
-            <div
-                onClick={openFilePicker}
-                className={cn(
-                    "group border-muted-foreground/30 bg-muted/20 relative flex cursor-pointer flex-col items-center justify-center overflow-hidden rounded-xl border-2 border-dashed px-6 py-8 text-center transition-all",
+  const handleRemoveAll = () => {
+    if (disabled) return;
 
-                    "hover:border-primary/70 hover:bg-primary/[0.03]",
+    updateFiles([]);
+    setValidationError(null);
 
-                    "dark:hover:bg-primary/[0.05]",
+    if (inputRef.current) {
+      inputRef.current.value = "";
+    }
+  };
 
-                    disabled && "cursor-not-allowed opacity-50",
-                )}
-            >
-                {/* Multiple file badge */}
-                <span
-                    className={cn(
-                        "absolute top-0 right-0 inline-flex items-center gap-1.5",
-                        "rounded-tr-xl rounded-bl-lg",
-                        "border-primary/20 border-b border-l",
-                        "bg-primary/10 px-3 py-1.5",
-                        "text-primary text-[11px] font-semibold",
-                    )}
-                >
-                    <Files className="h-3.5 w-3.5" />
-                    Multiple files
-                </span>
+  return (
+    <div className={cn("w-full min-w-0 space-y-1", className)}>
+      {label && (
+        <Label htmlFor={id} className="block text-[13px] font-semibold text-foreground">
+          {label}
+          {required && (
+            <span className="ml-1 text-destructive">*</span>
+          )}
+        </Label>
+      )}
 
-                {/* Icon */}
-                <div className="bg-primary/10 text-primary mb-3 flex h-12 w-12 items-center justify-center rounded-full transition-transform duration-200 group-hover:scale-105">
-                    <UploadCloud className="h-6 w-6" />
-                </div>
+      <div
+        role="button"
+        tabIndex={disabled ? -1 : 0}
+        aria-disabled={disabled}
+        aria-invalid={Boolean(validationError)}
+        onClick={openPicker}
+        onDragOver={(event) => event.preventDefault()}
+        onDrop={handleDrop}
+        onKeyDown={(event) => {
+          if (
+            event.target === event.currentTarget &&
+            (event.key === "Enter" || event.key === " ")
+          ) {
+            event.preventDefault();
+            openPicker();
+          }
+        }}
+        className={cn(
+          "relative flex min-h-32 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed px-3 py-4 text-center transition-colors",
+          "border-border bg-muted/20 hover:border-primary/50 hover:bg-muted/40",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+          validationError && "border-destructive/60 bg-destructive/5",
+          disabled && "cursor-not-allowed opacity-50",
+        )}
+      >
+        {/* Top Left: Multiple File Selection Info */}
+        <span className="absolute top-2 left-2 rounded-md bg-primary/10 px-2 py-1 text-[11px] font-medium text-primary">
+          একাধিক ফাইল নির্বাচন করুন
+        </span>
 
-                {/* Title */}
-                <h3 className="text-sm font-semibold">Select multiple files</h3>
+        {/* Top Right: File Counter */}
+        <span className="absolute top-2 right-2 rounded-md bg-muted px-2 py-1 text-[11px] font-semibold">
+          {selectedCount}/{maxFiles}
+        </span>
 
-                {/* Info */}
-                <p className="text-primary mt-1 text-xs font-medium">
-                    Upload several files at once
-                </p>
+        <UploadCloud className="mb-2 h-8 w-8 text-primary mt-6 md:mt-2" />
 
-                {/* Description */}
-                <p className="text-muted-foreground mt-1.5 text-xs">
-                    {description}
-                </p>
+        <p className="text-xs font-medium">
+          {isFull
+            ? "সর্বোচ্চ ফাইল নির্বাচন করা হয়েছে"
+            : description}
+        </p>
 
-                {/* Accepted files */}
-                <p className="text-muted-foreground mt-2 text-[11px]">
-                    Allowed files:{" "}
-                    <span className="font-medium">{formatAccept()}</span>
-                </p>
+        <p className="mt-2 text-xs text-muted-foreground">
+          সর্বোচ্চ {maxFiles}টি ফাইল • প্রতিটি {maxFileSizeMB} MB
+        </p>
 
-                {/* Native file input */}
-                <input
-                    ref={inputRef}
-                    id={id}
-                    name={name}
-                    type="file"
-                    multiple
-                    hidden
-                    accept={accept}
-                    disabled={disabled}
-                    onChange={handleFileChange}
-                />
+        <p className="mt-1 break-words text-[11px] text-muted-foreground">
+          গ্রহণযোগ্য ফাইল:
+          <span className="ml-1 rounded bg-primary/10 px-2 py-0.5 font-medium text-primary">
+            {accept.replaceAll(".", "").toUpperCase()}
+          </span>
+        </p>
+
+        <input
+          ref={inputRef}
+          id={id}
+          name={name}
+          type="file"
+          multiple
+          accept={accept}
+          disabled={disabled}
+          tabIndex={-1}
+          className="hidden"
+          onClick={(event) => event.stopPropagation()}
+          onChange={handleFileChange}
+        />
+      </div>
+
+      {validationError && (
+        <div
+          role="alert"
+          aria-live="assertive"
+          className="flex items-start gap-2 rounded-md border border-destructive/20 bg-destructive/5 px-3 py-2 text-destructive"
+        >
+          <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
+
+          <p className="min-w-0 flex-1 whitespace-pre-line break-words text-xs leading-5">
+            {validationError}
+          </p>
+
+          <button
+            type="button"
+            onClick={() => setValidationError(null)}
+            aria-label="ত্রুটি বার্তা বন্ধ করুন"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+      )}
+
+      {selectedCount > 0 && (
+        <div className="overflow-hidden rounded-lg border bg-background">
+          <div className="flex items-center justify-between gap-2 border-b bg-muted/30 px-3 py-2">
+            <div className="flex items-center gap-2">
+              <Files className="h-4 w-4 text-primary" />
+
+              <span className="text-xs font-semibold">
+                নির্বাচিত ফাইল ({selectedCount}/{maxFiles})
+              </span>
             </div>
 
-            {/* Selected files */}
-            {selectedFiles.length > 0 && (
-                <div className="bg-background overflow-hidden rounded-xl border">
-                    {/* Header */}
-                    <div className="bg-muted/30 flex items-center justify-between gap-3 border-b px-3 py-2.5">
-                        <div className="flex min-w-0 items-center gap-2">
-                            <div className="bg-primary/10 text-primary flex h-8 w-8 shrink-0 items-center justify-center rounded-lg">
-                                <Files className="h-4 w-4" />
-                            </div>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              disabled={disabled}
+              onClick={handleRemoveAll}
+              className="h-7 px-2 text-xs text-destructive hover:text-destructive"
+            >
+              সব মুছুন
+            </Button>
+          </div>
 
-                            <div>
-                                <p className="text-xs font-semibold">
-                                    Files selected
-                                </p>
+          <div className="divide-y">
+            {selectedFiles.map((file, index) => {
+              const fileName =
+                typeof file === "string"
+                  ? file.split("/").pop() || file
+                  : file.name;
 
-                                <p className="text-muted-foreground text-[11px]">
-                                    Total{" "}
-                                    <span className="text-primary font-semibold">
-                                        {selectedFiles.length}
-                                    </span>{" "}
-                                    files
-                                </p>
-                            </div>
-                        </div>
+              return (
+                <div
+                  key={`${getFileKey(file)}-${index}`}
+                  className="flex min-w-0 items-center justify-between gap-2 px-3 py-2"
+                >
+                  <FileText className="h-4 w-4 shrink-0 text-primary" />
 
-                        <Button
-                            type="button"
-                            variant="ghost"
-                            size="sm"
-                            disabled={disabled}
-                            onClick={(event) => {
-                                event.stopPropagation();
-                                handleRemoveAll();
-                            }}
-                            className="hover:text-destructive h-7 px-2 text-xs"
-                        >
-                            Remove all
-                        </Button>
-                    </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-xs font-medium">
+                      {fileName}
+                    </p>
 
-                    {/* File list */}
-                    <div className="divide-y">
-                        {selectedFiles.map((file, index) => (
-                            <div
-                                key={`${getFileKey(file)}-${index}`}
-                                className="flex items-center justify-between gap-3 px-3 py-2.5"
-                            >
-                                <div className="flex min-w-0 items-center gap-3">
-                                    <div className="bg-primary/10 text-primary flex h-9 w-9 shrink-0 items-center justify-center rounded-lg">
-                                        <FileText className="h-4 w-4" />
-                                    </div>
+                    <p className="text-[11px] text-muted-foreground">
+                      {typeof file === "string"
+                        ? "পূর্বে সংযুক্ত ফাইল"
+                        : formatUploadSize(file.size)}
+                    </p>
+                  </div>
 
-                                    <div className="min-w-0">
-                                        <p
-                                            title={
-                                                typeof file === "string"
-                                                    ? file.split("/").pop()
-                                                    : file.name
-                                            }
-                                            className="truncate text-xs font-medium"
-                                        >
-                                            {typeof file === "string"
-                                                ? file.split("/").pop()
-                                                : file.name}
-                                        </p>
-
-                                        <p className="text-muted-foreground mt-0.5 text-[11px]">
-                                            {typeof file === "string"
-                                                ? "Existing File"
-                                                : formatFileSize(file.size)}
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <Button
-                                    type="button"
-                                    variant="ghost"
-                                    size="icon"
-                                    disabled={disabled}
-                                    onClick={(event) => {
-                                        event.stopPropagation();
-                                        handleRemove(index);
-                                    }}
-                                    className="hover:bg-destructive/10 hover:text-destructive h-8 w-8 shrink-0"
-                                    aria-label={`${typeof file === "string" ? "file" : file.name} remove`}
-                                >
-                                    <X className="h-4 w-4" />
-                                </Button>
-                            </div>
-                        ))}
-                    </div>
-
-                    {/* Footer */}
-                    <div className="bg-muted/20 border-t px-3 py-2">
-                        <p className="text-muted-foreground text-[11px]">
-                            Click the upload box above to add more files.
-                        </p>
-                    </div>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    disabled={disabled}
+                    onClick={() => handleRemove(index)}
+                    className="h-7 w-7 shrink-0 hover:text-destructive"
+                    aria-label={`${fileName} মুছে ফেলুন`}
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
                 </div>
-            )}
+              );
+            })}
+          </div>
+
+          <p className="border-t bg-muted/20 px-3 py-2 text-[11px] text-muted-foreground">
+            {isFull
+              ? "ফাইলের সর্বোচ্চ সীমা পূর্ণ হয়েছে।"
+              : `আরও ${remaining}টি ফাইল যোগ করতে পারবেন।`}
+          </p>
         </div>
-    );
+      )}
+    </div>
+  );
 }

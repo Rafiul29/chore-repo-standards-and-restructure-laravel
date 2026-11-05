@@ -46,9 +46,6 @@ import {
     type ReactNode,
 } from "react";
 
-import { FormMultipleFileUpload } from "@/components/BrandField/BrandMultipleFile";
-import { BrandFieldSearchSelect } from "@/components/BrandField/BrandFieldSearchSelect";
-import { FormSingleFileUpload } from "@/components/BrandField/BrandSingleFile";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -60,6 +57,9 @@ import DeleteAlert from "@/components/shared/delete-alert";
 import { Modal } from "@/components/shared/modal";
 import { BrandField } from "@/components/BrandField/BrandField";
 import { cn } from "@/lib/utils";
+import { BrandFieldSearchSelect } from "@/components/BrandField/BrandFieldSearchSelect";
+import { BrandSingleFile } from "@/components/BrandField/BrandSingleFile";
+import { BrandMultipleFile } from "@/components/BrandField/BrandMultipleFile";
 
 const gridClass =
     "grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4";
@@ -2510,7 +2510,7 @@ export default function ComponentsExample() {
                                                     }
                                                 }}
                                             >
-                                                <FormSingleFileUpload
+                                                <BrandSingleFile
                                                     key={`profile-${resetCount}`}
                                                     id="profile-picture"
                                                     name="profile_picture"
@@ -2546,12 +2546,14 @@ export default function ComponentsExample() {
                                                     }
                                                 }}
                                             >
-                                                <FormMultipleFileUpload
+                                                <BrandMultipleFile
                                                     key={`documents-${resetCount}`}
                                                     label="Supporting Documents"
                                                     required
                                                     accept=".pdf,.jpg,.jpeg,.png"
-                                                    description="Upload one or more PDF, JPG, or PNG files (Max 5 MB each)"
+                                                    description="Upload one or more PDF, JPG, or PNG files (Max 2 MB each)"
+                                                    maxFileSizeMB={2}
+                                                    maxFiles={3}
                                                 />
                                             </CaptureChange>
 
