@@ -1,7 +1,7 @@
 import { Form, Head } from '@inertiajs/react';
 import { useRef } from 'react';
 import SecurityController from '@/actions/App/Http/Controllers/Settings/SecurityController';
-import Heading from '@/components/shared/heading';
+import Heading from '@/components/shared/Heading';
 import InputError from '@/components/shared/input-error';
 import PasswordInput from '@/components/shared/password-input';
 import { Button } from '@/components/ui/button';

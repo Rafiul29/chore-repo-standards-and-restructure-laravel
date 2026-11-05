@@ -1,7 +1,7 @@
 import { AlertTriangle, Check, Info, Loader2, XCircle } from 'lucide-react';
 import { toast } from 'sonner';
 
-export const appToast = {
+export const AppToast = {
     success: (title: string, description?: string) =>
         toast.success(title, {
             description,

@@ -12,7 +12,7 @@ import {
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { FILE_UPLOAD, UploadFileValue, validateUploadFile } from "../constants/file-upload";
+import { FILE_UPLOAD, UploadFileValue, validateUploadFile } from "../../constants/file-upload";
 
 
 

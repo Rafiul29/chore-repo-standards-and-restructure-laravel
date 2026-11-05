@@ -52,14 +52,13 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 
-import { appToast } from "@/components/shared/toast";
-import DeleteAlert from "@/components/shared/delete-alert";
-import { Modal } from "@/components/shared/modal";
+import { Modal } from "@/components/shared/Modal";
 import { BrandField } from "@/components/BrandField/BrandField";
 import { cn } from "@/lib/utils";
 import { BrandFieldSearchSelect } from "@/components/BrandField/BrandFieldSearchSelect";
 import { BrandSingleFile } from "@/components/BrandField/BrandSingleFile";
 import { BrandMultipleFile } from "@/components/BrandField/BrandMultipleFile";
+import { AppToast } from "@/components/shared/AppToast";
 
 const gridClass =
     "grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4";
@@ -1170,7 +1169,7 @@ export function UserModalDemo({
     const saveProfile = () => {
         setProfile(draft);
         setIsOpen(false);
-        appToast.success("Profile updated", `Saved ${draft.name}.`);
+        AppToast.success("Profile updated", `Saved ${draft.name}.`);
         onSaveSuccess?.(draft.name);
     };
 
@@ -1385,7 +1384,7 @@ export default function ComponentsExample() {
     const handleCopySnippet = (code: string, id: string) => {
         navigator.clipboard.writeText(code);
         setCopiedSnippet(id);
-        appToast.success("Copied to clipboard", "Code snippet copied.");
+        AppToast.success("Copied to clipboard", "Code snippet copied.");
         setTimeout(() => setCopiedSnippet(null), 2000);
     };
 
@@ -1394,7 +1393,7 @@ export default function ComponentsExample() {
         setSubmitted(true);
 
         if (Object.keys(errors).length > 0) {
-            appToast.error(
+            AppToast.error(
                 "Check the form",
                 `Please fix the ${Object.keys(errors).length} highlighted field(s).`,
             );
@@ -1402,7 +1401,7 @@ export default function ComponentsExample() {
         }
 
         setSavedValues(values);
-        appToast.success(
+        AppToast.success(
             "Saved",
             "All field values were successfully captured.",
         );
@@ -1414,7 +1413,7 @@ export default function ComponentsExample() {
         setSavedValues(null);
         setShowPassword(false);
         setResetCount((count) => count + 1);
-        appToast.info("Form reset", "All fields have been reset to defaults.");
+        AppToast.info("Form reset", "All fields have been reset to defaults.");
     };
 
     const handleFillSampleData = () => {
@@ -1499,7 +1498,7 @@ export default function ComponentsExample() {
             plan_tier: "pro",
         });
         setSubmitted(false);
-        appToast.success(
+        AppToast.success(
             "Sample Data Loaded",
             "All fields populated with sample values.",
         );
@@ -3006,7 +3005,6 @@ export default function ComponentsExample() {
 
                                     <div className="flex flex-wrap items-center gap-4 rounded-xl border border-border p-4 bg-muted/20">
                                         <UserModalDemo />
-                                        <DeleteAlert />
                                     </div>
                                 </div>
                             )}
@@ -3023,7 +3021,7 @@ export default function ComponentsExample() {
                                             type="button"
                                             size="sm"
                                             onClick={() =>
-                                                appToast.success(
+                                                AppToast.success(
                                                     "Operation Completed",
                                                     "The action completed successfully.",
                                                 )
@@ -3037,7 +3035,7 @@ export default function ComponentsExample() {
                                             variant="outline"
                                             size="sm"
                                             onClick={() =>
-                                                appToast.warning(
+                                                AppToast.warning(
                                                     "Attention Required",
                                                     "Please check configuration.",
                                                 )
@@ -3051,7 +3049,7 @@ export default function ComponentsExample() {
                                             variant="destructive"
                                             size="sm"
                                             onClick={() =>
-                                                appToast.error(
+                                                AppToast.error(
                                                     "Action Failed",
                                                     "Something went wrong.",
                                                 )
@@ -3065,7 +3063,7 @@ export default function ComponentsExample() {
                                             variant="secondary"
                                             size="sm"
                                             onClick={() =>
-                                                appToast.info(
+                                                AppToast.info(
                                                     "Update Available",
                                                     "A newer version is ready.",
                                                 )
@@ -3079,13 +3077,13 @@ export default function ComponentsExample() {
                                             variant="outline"
                                             size="sm"
                                             onClick={() => {
-                                                const id = appToast.loading(
+                                                const id = AppToast.loading(
                                                     "Uploading assets...",
                                                     "Please wait.",
                                                 );
                                                 setTimeout(() => {
-                                                    appToast.dismiss(id);
-                                                    appToast.success(
+                                                    AppToast.dismiss(id);
+                                                    AppToast.success(
                                                         "Upload Complete",
                                                         "Files synced successfully.",
                                                     );
@@ -3192,7 +3190,7 @@ export default function ComponentsExample() {
                                                                     size="sm"
                                                                     className="h-6 text-[11px] px-2"
                                                                     onClick={() =>
-                                                                        appToast.info(
+                                                                        AppToast.info(
                                                                             "User Selected",
                                                                             `Selected ${row.name}`,
                                                                         )

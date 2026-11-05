@@ -2,7 +2,7 @@ import { Form, Head, usePage } from '@inertiajs/react';
 import { Link } from '@inertiajs/react';
 import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileController';
 import DeleteUser from '@/components/dashboard/delete-user';
-import Heading from '@/components/shared/heading';
+import Heading from '@/components/shared/Heading';
 import InputError from '@/components/shared/input-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';

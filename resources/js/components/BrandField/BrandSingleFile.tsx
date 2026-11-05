@@ -11,7 +11,7 @@ import {
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { FILE_UPLOAD, formatUploadSize, UploadFileValue } from "../constants/file-upload";
+import { FILE_UPLOAD, formatUploadSize, UploadFileValue } from "../../constants/file-upload";
 
 
 
